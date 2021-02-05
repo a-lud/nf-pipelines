@@ -1,6 +1,33 @@
 # Nextflow Pipelines
 
-This repository will contain a collection of nextflow pipelines relating to
-work that I carry out in my PhD. The aim is to implement as many analyses that
-I do into standard pipelines so that I can easily re-use them, point to them
-in publications and manage my data a little bit more easily.
+This repository will contain a collection of `Nextflow` pipelines relating to
+work that I carry out in my PhD. My goal is to document as many analyses in
+standardised workflows to:
+
+1. Better document my code
+2. Produce reproducible pipelines
+3. Have a central code repository for publication purposes
+
+## Planned pipelines
+
+Pipelines I plan to write include:
+
+* CodeML
+* HyPhy
+* Sequence alignment
+* Read based phasing (`Whatshap`)
+* Variant Calling
+* PSMC/MSMC/MSMC-IM
+* Twisst
+* Admixture
+
+## Citation
+
+If you use any of the pipelines within this repository, a citation would be greatly
+appreciated. A simple link to this GitHub repository will be enough.
+
+## Author information
+
+Alastair Ludington
+alastair.ludington@adelaide.edu.au
+PhD Candidate, The University of Adelaide
