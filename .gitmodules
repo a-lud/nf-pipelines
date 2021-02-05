@@ -1,3 +1,6 @@
 [submodule "nf-modules"]
 	path = nf-modules
 	url = https://github.com/a-lud/nf-modules.git
+[submodule "nf-workflows"]
+	path = nf-workflows
+	url = https://github.com/a-lud/nf-workflows.git
