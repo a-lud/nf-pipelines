@@ -2,6 +2,12 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../nf-modules"
+		},
+		{
+			"path": "../nf-workflows"
 		}
 	]
 }

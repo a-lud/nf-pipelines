@@ -1,0 +1,12 @@
+name: nf-workflows
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - mafft=7.475
+  - t_coffee=11.0.8
+  - muscle=3.8.1551
+  - clustalo=1.2.4
+  - gblocks=0.91b
+  
