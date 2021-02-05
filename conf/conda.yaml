@@ -9,4 +9,5 @@ dependencies:
   - muscle=3.8.1551
   - clustalo=1.2.4
   - gblocks=0.91b
+  - parallel=20201122
   
