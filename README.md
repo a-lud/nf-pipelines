@@ -28,6 +28,6 @@ appreciated. A simple link to this GitHub repository will be enough.
 
 ## Author information
 
-Alastair Ludington
-alastair.ludington@adelaide.edu.au
+Alastair Ludington \\
+alastair.ludington@adelaide.edu.au \\
 PhD Candidate, The University of Adelaide
