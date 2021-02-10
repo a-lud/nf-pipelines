@@ -38,7 +38,17 @@ Main workflow
 workflow {
 
     include {MSA} from './nf-workflows/msa' params(params)
+    include {HYPHY} from './nf-workflows/hyphy' params(params)
 
-    MSA()
-
+    switch(params.pipeline) {
+        case 'msa':
+            MSA()
+            break;
+        case 'hyphy':
+            HYPHY()
+            break;
+        default
+            println("Shouldn't get here")
+            break;
+    }
 }

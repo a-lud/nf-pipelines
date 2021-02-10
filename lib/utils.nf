@@ -16,7 +16,12 @@ def printVersion(String version) {
 def printHelpMessage() {
     println(
         """
-        Arguments to come...
+        Required arguments:
+            --files_dir <str>               Directory path to fastq/fasta files
+            --files_ext <str>               Quoted regex string to match above files
+            --files_type <str>              Type of files [paired, single, fasta]
+            --outdir <str>                  Directory path to output location
+            --email <str>                   University email
         """.stripIndent()
     )
 }
@@ -31,12 +36,16 @@ def callHelp(Map args, String version) {
 }
 
 def checkRequiredArgs(Map args) {
-    def requiredArguments = [ 'files_dir', 'files_ext', 'files_type',
-                              'outdir', 'email', 'partition' ]
+    def requiredArguments = [ 'pipeline', 'files_dir', 'files_ext',
+                              'files_type', 'outdir', 'email', 'partition' ]
+    def valid_pipelines = [ 'msa', 'hyphy' ]
     def valid_types = [ 'paired', 'single', 'fasta' ]
     def valid_partitions = [ 'skylake', 'skylakehm', 'test' ]
 
     subset = args.subMap(requiredArguments)
+
+    // Valid pipeline arguments
+    assert subset.valid_pipelines.any { it == subset.pipeline } : "ERROR: Selected pipeline \"${subset.pipeline}\" is invalid. Please select one of ${valid_pipelines}"
 
     // Check - files directory exists
     File dir = new File(subset.files_dir)
@@ -62,8 +71,7 @@ def checkRequiredArgs(Map args) {
 }
 
 def checkMsaArgs(Map args) {
-    def msa = [ 'aligner', 'aligner_args', 'pep2nuc', 'nucleotide_dir', 'nucleotide_ext',
-                'clean_alignments', 'gblocks_args']
+    def msa = [ 'aligner', 'aligner_args', 'pep2nuc', 'nucleotide_dir', 'nucleotide_ext', 'clean_alignments', 'gblocks_args']
     def aligners = [ 'mafft', 'muscle', 'clustal', 'tcoffee' ]
 
     // Subset arguments
@@ -106,23 +114,50 @@ def checkMsaArgs(Map args) {
 
 }
 
+def checkHyphyArgs(Map args) {
+    def hyphy = [ 'method', 'pvalue', 'fel_optional','slac_optional',
+    'fubar_optional', 'meme_optional', 'absrel_optional',
+    'busted_optional','relax_optional' ]
+    def methods = [ 'fel', 'slac', 'fubar', 'meme', 'absrel',
+                    'busted', 'relax' ]
+
+    // Subset arguments to HyPhy specific
+    subset = args.subMap(hyphy)
+
+    // Method/s have been provided
+    assert subset.method != false : 'ERROR: Must provide at least one method - ' + methods
+
+    // Convert provided method/s to list
+    method_lst = subset.method.tokenize(',')
+
+    // Check that provided methods are valid
+    assert methods.containsAll(method_lst) : "ERROR: At least one of the provided methods is invalid"
+
+    // Check pvalue
+    assert subset.pvalue != false : 'ERROR: Must provide a p-value between 0 and 1'
+}
+
 def printArguments(Map args) {
 
     // Drop un-needed arguments
     args = args.findAll({!['help'].contains(it.key)})
 
-    def requiredArguments = [ 'files_dir', 'files_ext', 'files_type',
-                              'outdir', 'email' ]
+    def requiredArguments = [ 'pipeline', 'files_dir', 'files_ext',
+                              'files_type', 'outdir', 'email' ]
     subset_required = args.subMap(requiredArguments)
     
-    def msaArguments = [ 'aligner', 'aligner_args', 'pep2nuc', 'nucleotide_dir', 'nucleotide_ext',
-                'clean_alignments', 'gblocks_args']
-    subset_msa = args.subMap(msaArguments)    
+    def msaArguments = [ 'aligner', 'aligner_args', 'pep2nuc', 'nucleotide_dir', 'nucleotide_ext', 'clean_alignments', 'gblocks_args']
+    subset_msa = args.subMap(msaArguments)
+
+    def hyphyArguments = [ 'method', 'pvalue', 'fel_optional', 'slac_optional',
+                          'fubar_optional', 'meme_optional', 'absrel_optional',
+                          'busted_optional', 'relax_optional' ]
+    subset_hyphy = args.subMap(hyphyArguments)
     
     resourcesArguments = args.findAll { k,v -> !(k in requiredArguments + msaArguments) }.keySet()
     subset_resources = args.subMap(resourcesArguments)
 
-    lst = [ subset_required, subset_msa, subset_resources ]
+    lst = [ subset_required, subset_msa, subset_hyphy, subset_resources ]
 
     println(
         """
