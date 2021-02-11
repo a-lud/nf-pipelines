@@ -36,19 +36,11 @@ Main workflow
 */
 
 workflow {
-
-    include {MSA} from './nf-workflows/msa' params(params)
-    include {HYPHY} from './nf-workflows/hyphy' params(params)
-
-    switch(params.pipeline) {
-        case 'msa':
-            MSA()
-            break;
-        case 'hyphy':
-            HYPHY()
-            break;
-        default
-            println("Shouldn't get here")
-            break;
+    if(params.pipeline == 'msa') {
+        include {MSA} from './nf-workflows/msa' params(params)
+        MSA()
+    } else if(params.pipeline == 'hyphy') {
+        include {HYPHY} from './nf-workflows/hyphy' params(params)
+        HYPHY()
     }
 }

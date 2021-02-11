@@ -17,6 +17,7 @@ def printHelpMessage() {
     println(
         """
         Required arguments:
+            --pipeline <str>                What pipeline do you want to run
             --files_dir <str>               Directory path to fastq/fasta files
             --files_ext <str>               Quoted regex string to match above files
             --files_type <str>              Type of files [paired, single, fasta]
@@ -45,7 +46,7 @@ def checkRequiredArgs(Map args) {
     subset = args.subMap(requiredArguments)
 
     // Valid pipeline arguments
-    assert subset.valid_pipelines.any { it == subset.pipeline } : "ERROR: Selected pipeline \"${subset.pipeline}\" is invalid. Please select one of ${valid_pipelines}"
+    assert valid_pipelines.any { it == subset.pipeline } : "ERROR: Selected pipeline \"${subset.pipeline}\" is invalid. Please select one of ${valid_pipelines}"
 
     // Check - files directory exists
     File dir = new File(subset.files_dir)
@@ -114,8 +115,33 @@ def checkMsaArgs(Map args) {
 
 }
 
+def printMsaArgs(Map args, String pipeline) {
+
+    def msaArguments = [ 'aligner', 'aligner_args', 'pep2nuc', 'nucleotide_dir', 'nucleotide_ext', 'clean_alignments', 'gblocks_args']
+    subset = args.subMap(msaArguments)
+
+    // Get the pipeline header ready
+    String header = '--------------------- ' + pipeline
+    Integer n = 50 - header.length() - 1
+    println('\n' + header + ' ' + '-' * n + '\n')
+    
+    subset.each {key, value ->
+        if(value instanceof java.util.ArrayList) {
+            println("$key:")
+            value.each { v -> 
+                println("  $v")
+            }
+        } else {
+            println("$key: $value")
+        }
+    }
+
+    println('')
+
+}
+
 def checkHyphyArgs(Map args) {
-    def hyphy = [ 'method', 'pvalue', 'fel_optional','slac_optional',
+    def hyphy = [ 'method', 'tree', 'pvalue', 'fel_optional','slac_optional',
     'fubar_optional', 'meme_optional', 'absrel_optional',
     'busted_optional','relax_optional' ]
     def methods = [ 'fel', 'slac', 'fubar', 'meme', 'absrel',
@@ -135,6 +161,49 @@ def checkHyphyArgs(Map args) {
 
     // Check pvalue
     assert subset.pvalue != false : 'ERROR: Must provide a p-value between 0 and 1'
+
+    // Check tree file
+    assert subset.tree != false : "ERROR: Must provide file path to tree"
+    tree_lst = subset.tree.tokenize(',')
+    tree_lst.each { t ->
+        try {
+            File file = new File(t)
+            assert file.exists()
+        } catch(AssertionError e) {
+            println("ERROR: Tree file does not exist or is empty\n Error message: " + e.getMessage())
+            System.exit(1)
+        }
+    }
+
+    // Checks are passed - clean up arguments and return
+    subset.put('method', method_lst)
+    subset.put('tree', tree_lst)
+
+    return subset
+}
+
+def printHyphyArgs(Map args, String pipeline) {
+    def hyphyArguments = [ 'method', 'tree', 'pvalue', 'fel_optional', 
+                           'slac_optional', 'fubar_optional', 'meme_optional', 'absrel_optional', 'busted_optional', 'relax_optional' ]
+    subset = args.subMap(hyphyArguments)
+
+    // Get the pipeline header ready
+    String header = '--------------------- ' + pipeline
+    Integer n = 50 - header.length() - 1
+    println('\n' + header + ' ' + '-' * n + '\n')
+    
+    subset.each {key, value ->
+        if(value instanceof java.util.ArrayList) {
+            println("$key:")
+            value.each { v -> 
+                println("  $v")
+            }
+        } else {
+            println("$key: $value")
+        }
+    }
+
+    println('')
 }
 
 def printArguments(Map args) {
@@ -142,22 +211,19 @@ def printArguments(Map args) {
     // Drop un-needed arguments
     args = args.findAll({!['help'].contains(it.key)})
 
+    // Subset arguments relating to each sub-workflow
     def requiredArguments = [ 'pipeline', 'files_dir', 'files_ext',
                               'files_type', 'outdir', 'email' ]
     subset_required = args.subMap(requiredArguments)
     
     def msaArguments = [ 'aligner', 'aligner_args', 'pep2nuc', 'nucleotide_dir', 'nucleotide_ext', 'clean_alignments', 'gblocks_args']
-    subset_msa = args.subMap(msaArguments)
 
-    def hyphyArguments = [ 'method', 'pvalue', 'fel_optional', 'slac_optional',
-                          'fubar_optional', 'meme_optional', 'absrel_optional',
-                          'busted_optional', 'relax_optional' ]
-    subset_hyphy = args.subMap(hyphyArguments)
+    def hyphyArguments = [ 'method', 'tree', 'pvalue', 'fel_optional',         
+                           'slac_optional', 'fubar_optional', 'meme_optional', 'absrel_optional', 'busted_optional', 'relax_optional' ]
     
-    resourcesArguments = args.findAll { k,v -> !(k in requiredArguments + msaArguments) }.keySet()
+    // Subset for resource arguments only
+    resourcesArguments = args.findAll { k,v -> !(k in requiredArguments + msaArguments + hyphyArguments) }.keySet()
     subset_resources = args.subMap(resourcesArguments)
-
-    lst = [ subset_required, subset_msa, subset_hyphy, subset_resources ]
 
     println(
         """
@@ -165,18 +231,32 @@ def printArguments(Map args) {
         ################### Arguments ####################
         """.stripIndent())
 
-    lst.each { l -> 
-        l.each {key, value ->
-
-            if(value instanceof java.util.ArrayList) {
-                println("$key:")
-                value.each { v -> 
-                    println("  $v")
-                }
-            } else {
-                println("$key: $value")
+    // Print required arguments
+    println('--------------------- Main -----------------------\n')
+    subset_required.each {key, val ->
+        if(val instanceof java.util.ArrayList) {
+            println "${key}:"
+            val.each {v ->
+                println "  ${v}"
             }
+        } else {
+            println "${key}: ${val}"
         }
-        println('')
+    }
+
+    // Print resources
+    String header = '--------------------- Resources'
+    Integer n = 50 - header.length() - 1
+    println('\n' + header + ' ' + '-' * n + '\n')
+
+    subset_resources.each { key, val ->
+        if(val instanceof java.util.ArrayList) {
+            println "${key}:"
+            val.each {v ->
+                println "  ${v}"
+            }
+        } else {
+            println "${key}: ${val}"
+        }
     }
 }
