@@ -27,11 +27,58 @@ def printHelpMessage() {
     )
 }
 
+def printHelpMSA() {
+    println(
+        """
+        MSA arguments:
+            --aligner <str>                 MSA software to use: mafft,muscle,clustal,tcoffee
+            --aligner_args <str>            String of aligner arguments
+            --pep2nuc                       Flag that will result in the conversion of peptide alignments to nucleotide
+            --nucleotide_dir <str>          Directory path to nucleotide Fasta files
+            --nucleotide_ext <str>          String of nucleotide extensions (e.g. '.fa', '.fasta', '.fna')
+            --clean_alignments              Flag that will result in GBlocks being used to clean gappy alignments
+            --gblocks_args <str>            String of arguments to provide to GBlocks
+        """.stripIndent()
+    )
+}
+
+def printHelpHyPhy() {
+    println(
+        """
+        HyPhy arguments:
+            --method <str>                  Comma separated list of valid methods (fel,slac,fubar,meme,absrel,busted,relax)
+            --tree <str>                    Comma separated list of tree files
+            --pvalue <int>                  Significance cutoff
+            --fel_optional <str>            String of optional arguments for the 'fel' method
+            --slac_optional <str>           String of optional arguments for the 'slac' method
+            --fubar_optional <str>          String of optional arguments for the 'fubar' method
+            --meme_optional <str>           String of optional arguments for the 'meme' method
+            --absrel_optional <str>         String of optional arguments for the 'absrel' method
+            --busted_optional <str>         String of optional arguments for the 'busted' method
+            --relax_optional <str>          String of optional arguments for the 'relax' method
+        """.stripIndent()
+    )
+}
+
 def callHelp(Map args, String version) {
+
+    sep = "--------------------------------------------------------------"
 
     if(args.help == true) {
         printVersion(version)
         printHelpMessage()
+        System.exit(0)
+    } else if (args.help == 'msa') {
+        printVersion(version)
+        printHelpMessage()
+        println(sep)
+        printHelpMSA()
+        System.exit(0)
+    } else if (args.help == 'hyphy') {
+        printVersion(version)
+        printHelpMessage()
+        println(sep)
+        printHelpHyPhy()
         System.exit(0)
     }
 }
