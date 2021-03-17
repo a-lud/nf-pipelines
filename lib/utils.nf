@@ -48,7 +48,6 @@ def printHelpHyPhy() {
         HyPhy arguments:
             --method <str>                  Comma separated list of valid methods (fel,slac,fubar,meme,absrel,busted,relax)
             --tree <str>                    Comma separated list of tree files
-            --pvalue <int>                  Significance cutoff
             --fel_optional <str>            String of optional arguments for the 'fel' method
             --slac_optional <str>           String of optional arguments for the 'slac' method
             --fubar_optional <str>          String of optional arguments for the 'fubar' method
@@ -188,7 +187,7 @@ def printMsaArgs(Map args, String pipeline) {
 }
 
 def checkHyphyArgs(Map args) {
-    def hyphy = [ 'method', 'tree', 'pvalue', 'fel_optional','slac_optional',
+    def hyphy = [ 'method', 'tree', 'fel_optional','slac_optional',
     'fubar_optional', 'meme_optional', 'absrel_optional',
     'busted_optional','relax_optional' ]
     def methods = [ 'fel', 'slac', 'fubar', 'meme', 'absrel',
@@ -205,9 +204,6 @@ def checkHyphyArgs(Map args) {
 
     // Check that provided methods are valid
     assert methods.containsAll(method_lst) : "ERROR: At least one of the provided methods is invalid"
-
-    // Check pvalue
-    assert subset.pvalue != false : 'ERROR: Must provide a p-value between 0 and 1'
 
     // Check tree file
     assert subset.tree != false : "ERROR: Must provide file path to tree"
@@ -230,7 +226,7 @@ def checkHyphyArgs(Map args) {
 }
 
 def printHyphyArgs(Map args, String pipeline) {
-    def hyphyArguments = [ 'method', 'tree', 'pvalue', 'fel_optional', 
+    def hyphyArguments = [ 'method', 'tree', 'fel_optional', 
                            'slac_optional', 'fubar_optional', 'meme_optional', 'absrel_optional', 'busted_optional', 'relax_optional' ]
     subset = args.subMap(hyphyArguments)
 
@@ -265,7 +261,7 @@ def printArguments(Map args) {
     
     def msaArguments = [ 'aligner', 'aligner_args', 'pep2nuc', 'nucleotide_dir', 'nucleotide_ext', 'clean_alignments', 'gblocks_args']
 
-    def hyphyArguments = [ 'method', 'tree', 'pvalue', 'fel_optional',         
+    def hyphyArguments = [ 'method', 'tree', 'fel_optional',         
                            'slac_optional', 'fubar_optional', 'meme_optional', 'absrel_optional', 'busted_optional', 'relax_optional' ]
     
     // Subset for resource arguments only
