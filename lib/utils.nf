@@ -133,7 +133,10 @@ def checkRequiredArgs(Map args) {
         try {
             assert value != false
         } catch(AssertionError e) {
-            println("ERROR: Missing required argument --${key}\nError message: " + e.getMessage())
+            println("ERROR: Missing required argument --${key}") 
+            println(e.getMessage())
+            System.exit(1)
+            
         }
     }
     
@@ -161,13 +164,17 @@ def checkMsaArgs(Map args) {
         try {
             assert subset.nucleotide_dir != false
         } catch (AssertionError e) {
-            println("ERROR: --pep2nuc selected but missing arguments to --nucleotide_dir\nError message: " + e.getMessage())
+            println("ERROR: --pep2nuc selected but missing arguments to --nucleotide_dir")
+            println(e.getMessage())
+            System.exit(1)
         }
 
         try {
             assert subset.nucleotide_ext != false
         } catch (AssertionError e) {
-            println("ERROR: --pep2nuc selected but missing arguments to --nucleotide_ext\nError message: " + e.getMessage())
+            println("ERROR: --pep2nuc selected but missing arguments to --nucleotide_ext")
+            println(e.getMessage())
+            System.exit(1)
         }
 
         // Check nucleotide directory exists
@@ -175,7 +182,9 @@ def checkMsaArgs(Map args) {
             File dir = new File(subset.nucleotide_dir)
             assert dir.exists()
         } catch (AssertionError e) {
-            println("ERROR: Neucleotide directory doesn't exist\nError message: " + e.getMessage())
+            println("ERROR: Neucleotide directory doesn't exist")
+            println(e.getMessage())
+            System.exit(1)
         }
     }
 
@@ -236,7 +245,8 @@ def checkHyphyArgs(Map args) {
             File file = new File(t)
             assert file.exists()
         } catch(AssertionError e) {
-            println("ERROR: Tree file does not exist or is empty\n Error message: " + e.getMessage())
+            println("ERROR: Tree file does not exist or is empty")
+            println(e.getMessage())
             System.exit(1)
         }
     }
@@ -289,6 +299,7 @@ def checkCodemlArgs(Map args) {
     } catch (AssertionError e) {
         println("ERROR: Missing required argument")
         println(e.getMessage())
+        System.exit(1)
     }
 
     // Check models are valid
@@ -297,23 +308,25 @@ def checkCodemlArgs(Map args) {
     } catch (AssertionError e) {
         println("ERROR: Model/s provided are not valid")
         println(e.getMessage())
+        System.exit(1)
     }
 
     // Check tests are part of provided models
-    if(tests) {
+    if(subset.tests) {
         try {
             mod = subset.models.tokenize(',')
-            test = test.replaceAll(' ', ',').tokenize(',')
-            mod.containsAll(test)
+            test = subset.tests.replaceAll(' ', ',').tokenize(',')
+            assert mod.containsAll(test)
         } catch (AssertionError e) {
             println("ERROR: Models provided to '--tests' do no match '--models'")
             println(e.getMessage())
+            System.exit(1)
         }
     }
 
     // Check tree files
     def list_trees = []
-    trees.tokenize(',').each {
+    subset.trees.tokenize(',').each {
         try {
             File file = new File(it)
             assert file.exists()
@@ -321,6 +334,7 @@ def checkCodemlArgs(Map args) {
         } catch (AssertionError e){
             println("ERROR: Tree file does not exist - ${it}")
             println(e.getMessage())
+            System.exit(1)
         }
     }
 
