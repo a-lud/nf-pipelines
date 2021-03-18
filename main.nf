@@ -36,11 +36,14 @@ Main workflow
 */
 
 workflow {
-    if(params.pipeline == 'msa') {
+    if (params.pipeline == 'msa') {
         include {MSA} from './nf-workflows/msa' params(params)
         MSA()
-    } else if(params.pipeline == 'hyphy') {
+    } else if (params.pipeline == 'hyphy') {
         include {HYPHY} from './nf-workflows/hyphy' params(params)
         HYPHY()
+    } else if (params.pipeline == 'codeml' ) {
+        include {CODEML} from './nf-workflows/codeml' params(params)
+        CODEML()
     }
 }

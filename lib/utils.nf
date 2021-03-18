@@ -59,6 +59,23 @@ def printHelpHyPhy() {
     )
 }
 
+def printHelpCodeml() {
+    println(
+        """
+        CodeML arguments:
+            --models <str>                  String of models to run separated by commas (e.g. 'M1,M2')
+                                            [valid models: M0, M1, M2, M3, M4,
+                                                           M5, M6, M7, M8, M8a,
+                                                           M9, M10, M11, M12, M13,
+                                                           SLR, bsA, bsA1, bsB, bsC,
+                                                           bsD, b_free, b_neut, fb, fb_anc]
+            --trees <str>                   List of tree files to use
+            --tests <str>                   String of model comparisons (e.g. 'M2,M1 M3,M0')
+            --codeml_optional <str>         Optional paramters for ETE-Evol CodeML
+        """.stripIndent()
+    )
+}
+
 def callHelp(Map args, String version) {
 
     sep = "--------------------------------------------------------------"
@@ -79,13 +96,19 @@ def callHelp(Map args, String version) {
         println(sep)
         printHelpHyPhy()
         System.exit(0)
+    } else if (args.help == 'codeml') {
+        printVersion(version)
+        printHelpMessage()
+        println(sep)
+        printHelpCodeml()
+        System.exit(0)
     }
 }
 
 def checkRequiredArgs(Map args) {
     def requiredArguments = [ 'pipeline', 'files_dir', 'files_ext',
                               'files_type', 'outdir', 'email', 'partition' ]
-    def valid_pipelines = [ 'msa', 'hyphy' ]
+    def valid_pipelines = [ 'msa', 'hyphy', 'codeml' ]
     def valid_types = [ 'paired', 'single', 'fasta' ]
     def valid_partitions = [ 'skylake', 'skylakehm', 'test' ]
 
@@ -249,6 +272,85 @@ def printHyphyArgs(Map args, String pipeline) {
     println('')
 }
 
+def checkCodemlArgs(Map args) {
+    def codeml = [ 'models', 'trees', 'tests', 'codeml_optional' ]
+    def valid_models = [ 'M0', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7',
+                         'M8', 'M8a', 'M9', 'M10', 'M11', 'M12', 'M13',
+                         'SLR',' bsA', 'bsA1', 'bsB', 'bsC', 'bsD', 
+                         'b_free', 'b_neut', 'fb', 'fb_anc' ]
+
+    // Subset arguments to CodeML specific
+    subset = args.subMap(codeml)
+
+    // Check required arguments
+    try {
+        assert subset.models
+        assert subset.trees
+    } catch (AssertionError e) {
+        println("ERROR: Missing required argument")
+        println(e.getMessage())
+    }
+
+    // Check models are valid
+    try {
+        assert valid_models.containsAll(subset.models.tokenize(','))
+    } catch (AssertionError e) {
+        println("ERROR: Model/s provided are not valid")
+        println(e.getMessage())
+    }
+
+    // Check tests are part of provided models
+    if(tests) {
+        try {
+            mod = subset.models.tokenize(',')
+            test = test.replaceAll(' ', ',').tokenize(',')
+            mod.containsAll(test)
+        } catch (AssertionError e) {
+            println("ERROR: Models provided to '--tests' do no match '--models'")
+            println(e.getMessage())
+        }
+    }
+
+    // Check tree files
+    def list_trees = []
+    trees.tokenize(',').each {
+        try {
+            File file = new File(it)
+            assert file.exists()
+            list_trees.add(file)
+        } catch (AssertionError e){
+            println("ERROR: Tree file does not exist - ${it}")
+            println(e.getMessage())
+        }
+    }
+
+    subset.trees = list_trees
+    return subset
+}
+
+def printCodemlArgs(Map args, String pipeline) {
+    def codemlArguments = [ 'models', 'trees', 'tests', 'codeml_optional' ]
+    subset = args.subMap(codemlArguments)
+
+    // Get the pipeline header ready
+    String header = '--------------------- ' + pipeline
+    Integer n = 50 - header.length() - 1
+    println('\n' + header + ' ' + '-' * n + '\n')
+    
+    subset.each {key, value ->
+        if(value instanceof java.util.ArrayList) {
+            println("$key:")
+            value.each { v -> 
+                println("  $v")
+            }
+        } else {
+            println("$key: $value")
+        }
+    }
+
+    println('')
+}
+
 def printArguments(Map args) {
 
     // Drop un-needed arguments
@@ -263,9 +365,11 @@ def printArguments(Map args) {
 
     def hyphyArguments = [ 'method', 'tree', 'fel_optional',         
                            'slac_optional', 'fubar_optional', 'meme_optional', 'absrel_optional', 'busted_optional', 'relax_optional' ]
-    
+
+    def codemlArguments = [ 'models', 'trees', 'tests', 'codeml_optional' ]
+        
     // Subset for resource arguments only
-    resourcesArguments = args.findAll { k,v -> !(k in requiredArguments + msaArguments + hyphyArguments) }.keySet()
+    resourcesArguments = args.findAll { k,v -> !(k in requiredArguments + msaArguments + hyphyArguments + codemlArguments) }.keySet()
     subset_resources = args.subMap(resourcesArguments)
 
     println(
