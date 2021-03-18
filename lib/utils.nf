@@ -338,6 +338,7 @@ def checkCodemlArgs(Map args) {
         }
     }
 
+    subset.models = subset.models.replaceAll(',', ' ')
     subset.trees = list_trees
     return subset
 }
