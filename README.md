@@ -13,14 +13,15 @@ standardised workflows to:
 Pipelines I plan to write include:
 
 - [x] [Multiple Sequence Alignment](https://github.com/a-lud/nf-pipelines/wiki/Multiple-Sequence-Alignment)
-- [x] [CodeML (ETE3 implementation)](https://github.com/a-lud/nf-pipelines/wiki/CodeML---ETE3-implementation)
-- [x] [HyPhy](https://github.com/a-lud/nf-pipelines/wiki/HyPhy)
-- [ ] Sequence alignment
+- [x] Selection analyses
+  - [CodeML (ETE3 implementation)](https://github.com/a-lud/nf-pipelines/wiki/CodeML---ETE3-implementation)
+  - [HyPhy](https://github.com/a-lud/nf-pipelines/wiki/HyPhy)
+- [ ] Sequence alignment (`BWA2`, `Minimap2`)
+- [ ] Variant Calling (`GATK`, `BCFtools`, `Freebayes`)
 - [ ] Read based phasing (`Whatshap`)
-- [ ] Variant Calling
-- [ ] PSMC/MSMC/MSMC-IM
-- [ ] Twisst
-- [ ] Admixture
+- [ ] Demographic Analyses (`PSMC`, `MSMC`, `MSMC-IM`)
+- [ ] Subtree topology weighting (`Twisst`)
+- [ ] Admixture tests
 
 ## Citation
 
