@@ -12,14 +12,15 @@ standardised workflows to:
 
 Pipelines I plan to write include:
 
-* CodeML
-* HyPhy
-* Sequence alignment
-* Read based phasing (`Whatshap`)
-* Variant Calling
-* PSMC/MSMC/MSMC-IM
-* Twisst
-* Admixture
+- [x] [Multiple Sequence Alignment](https://github.com/a-lud/nf-pipelines/wiki/Multiple-Sequence-Alignment)
+- [x] [CodeML (ETE3 implementation)](https://github.com/a-lud/nf-pipelines/wiki/CodeML---ETE3-implementation)
+- [x] [HyPhy](https://github.com/a-lud/nf-pipelines/wiki/HyPhy)
+- [ ] Sequence alignment
+- [ ] Read based phasing (`Whatshap`)
+- [ ] Variant Calling
+- [ ] PSMC/MSMC/MSMC-IM
+- [ ] Twisst
+- [ ] Admixture
 
 ## Citation
 
