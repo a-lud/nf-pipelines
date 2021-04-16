@@ -9,5 +9,7 @@
 		{
 			"path": "../nf-workflows"
 		}
-	]
+	],
+	"settings": {
+	}
 }

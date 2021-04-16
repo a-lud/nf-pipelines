@@ -42,8 +42,11 @@ workflow {
     } else if (params.pipeline == 'hyphy') {
         include {HYPHY} from './nf-workflows/hyphy' params(params)
         HYPHY()
-    } else if (params.pipeline == 'codeml' ) {
+    } else if (params.pipeline == 'codeml') {
         include {CODEML} from './nf-workflows/codeml' params(params)
         CODEML()
+    } else if (params.pipeline == 'transcurate') {
+        include {TRANSCURATE} from './nf-workflows/transcurate' params(params)
+        TRANSCURATE()
     }
 }
