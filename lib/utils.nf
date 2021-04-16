@@ -76,6 +76,17 @@ def printHelpCodeml() {
     )
 }
 
+def printHelpTransCurate() {
+    println(
+        """
+        Transcriptome Curation Arguments:
+            --cdhit_pid <float>             Percentage identity threshold for collapsing transcripts
+            --database_dir <str>            Directory path containin premade BLAST and PFAM databases
+            --completeORFs                  Flag to keep only CDS sequences with complete ORFs
+        """.stripIndent()
+    )
+}
+
 def callHelp(Map args, String version) {
 
     sep = "--------------------------------------------------------------"
@@ -102,13 +113,19 @@ def callHelp(Map args, String version) {
         println(sep)
         printHelpCodeml()
         System.exit(0)
+    } else if (args.help == 'transcurate') {
+        printVersion(version)
+        printHelpMessage()
+        println(sep)
+        printHelpTransCurate()
+        System.exit(0)
     }
 }
 
 def checkRequiredArgs(Map args) {
     def requiredArguments = [ 'pipeline', 'files_dir', 'files_ext',
                               'files_type', 'outdir', 'email', 'partition' ]
-    def valid_pipelines = [ 'msa', 'hyphy', 'codeml' ]
+    def valid_pipelines = [ 'msa', 'hyphy', 'codeml', 'transcurate' ]
     def valid_types = [ 'paired', 'single', 'fasta' ]
     def valid_partitions = [ 'skylake', 'skylakehm', 'test' ]
 
@@ -366,6 +383,46 @@ def printCodemlArgs(Map args, String pipeline) {
     println('')
 }
 
+def checkTransCurateArgs(Map args) {
+    def transCurate = [ 'cdhit_pid', 'database_dir', 'completeORFs' ]
+
+     // Subset arguments to TransCurate specific
+    subset = args.subMap(transCurate)
+
+    // Check CDHIT parameters
+    if (subset.cdhit_pid) {
+        assert subset.cdhit_pid instanceof Number
+        assert subset.cdhit_pid < 1
+    } else {
+        subset.cdhit_pid = 0.95
+    }
+
+    return subset
+}
+
+def printTransCurateArgs(Map args, String pipeline) {
+    def transCurateArgs = [ 'cdhit_pid', 'database_dir', 'completeORFs' ]
+    subset = args.subMap(transCurateArgs)
+
+    // Get the pipeline header ready
+    String header = '--------------------- ' + pipeline
+    Integer n = 50 - header.length() - 1
+    println('\n' + header + ' ' + '-' * n + '\n')
+    
+    subset.each {key, value ->
+        if(value instanceof java.util.ArrayList) {
+            println("$key:")
+            value.each { v -> 
+                println("  $v")
+            }
+        } else {
+            println("$key: $value")
+        }
+    }
+
+    println('')
+}
+
 def printArguments(Map args) {
 
     // Drop un-needed arguments
@@ -382,9 +439,11 @@ def printArguments(Map args) {
                            'slac_optional', 'fubar_optional', 'meme_optional', 'absrel_optional', 'busted_optional', 'relax_optional' ]
 
     def codemlArguments = [ 'models', 'trees', 'tests', 'codeml_optional' ]
+
+    def transCurateArguments = [ 'cdhit_pid', 'database_dir', 'completeORFs' ]
         
     // Subset for resource arguments only
-    resourcesArguments = args.findAll { k,v -> !(k in requiredArguments + msaArguments + hyphyArguments + codemlArguments) }.keySet()
+    resourcesArguments = args.findAll { k,v -> !(k in requiredArguments + msaArguments + hyphyArguments + codemlArguments + transCurateArguments) }.keySet()
     subset_resources = args.subMap(resourcesArguments)
 
     println(
