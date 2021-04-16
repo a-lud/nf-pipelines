@@ -16,12 +16,13 @@ Pipelines I plan to write include:
 - [x] Selection analyses
   - [CodeML (ETE3 implementation)](https://github.com/a-lud/nf-pipelines/wiki/CodeML---ETE3-implementation)
   - [HyPhy](https://github.com/a-lud/nf-pipelines/wiki/HyPhy)
-- [ ] Sequence alignment (`BWA2`, `Minimap2`)
+- [ ] Transcriptome Curation (`CD-HIT` and `TransDecoder`)
+- [ ] Sequence Alignment (`BWA2`, `Minimap2`)
 - [ ] Variant Calling (`GATK`, `BCFtools`, `Freebayes`)
-- [ ] Read based phasing (`Whatshap`)
+- [ ] Read Based Phasing (`Whatshap`)
 - [ ] Demographic Analyses (`PSMC`, `MSMC`, `MSMC-IM`)
-- [ ] Subtree topology weighting (`Twisst`)
-- [ ] Admixture tests
+- [ ] Subtree Topology Weighting (`Twisst`)
+- [ ] Admixture Tests
 
 ## Citation
 
