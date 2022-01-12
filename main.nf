@@ -7,17 +7,7 @@ Nextflow pipeline
 */
 
 nextflow.enable.dsl = 2
-version = '0.0.1'
-
-/*
-################################################################################
-Utility functions
-################################################################################
-*/
-
-include { callHelp;
-          checkRequiredArgs;
-          printArguments } from './lib/utils.nf'
+version = '0.1.0'
 
 /*
 ################################################################################
@@ -25,9 +15,8 @@ Check inputs
 ################################################################################
 */
 
-callHelp(params, version)
-checkRequiredArgs(params)
-printArguments(params)
+WorkflowMain.callHelp(params.help, version)
+WorkflowArguments.checkArguments(params, workflow.profile)
 
 /*
 ################################################################################
