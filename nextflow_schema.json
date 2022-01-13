@@ -1,0 +1,76 @@
+{
+  "version": "0.0.1",
+  "title": "NF-PIPELINES",
+  "description": [
+    "This repository houses a collection of workflows I have developed over the",
+    "course of my PhD. They are typically related to analyses that I needed to carry",
+    "out at some point or another. Feel free to try them out, adapt them or even use",
+    "them as a guide for your own custom pipelines."
+  ],
+  "definitions": {
+    "mandatory": {
+      "title": "Mandatory Arguments",
+      "description": "These options MUST be provided to run the pipeline:",
+      "arguments": {
+        "outdir": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "Path to the output directory where the results will be saved."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address to send completion report."
+        },
+        "pipeline": {
+          "type": "string",
+          "description": "Specification of which sub-workflow to run.",
+          "valid": ["msa", "hyphy", "codeml", "transcurate", "assembly"]
+        }
+      }
+    },
+    "msa": {
+      "title": "MSA pipeline options",
+      "description": "MSA pipeline specific arguments:",
+      "arguments": {
+        "input": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern": ".*f(ast)?a(.(gz|bgzf))?$",
+          "nfiles": "1",
+          "description": "Directory path to protein multi-FASTA files for alignment.",
+          "optional": "false"
+        },
+        "aligner": {
+          "type": "string",
+          "description": "Which multiple sequence aligner to use.",
+          "valid": ["mafft", "muscle", "clustal", "tcoffee"],
+          "optional": "false"
+        },
+        "aligner_args": {
+          "type": "string",
+          "description": "Additional arguments to provide the MSA software. It is on the user to ensure these are correct.",
+          "optional": "true"
+        },
+        "nucleotide": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern": ".*f(ast)?a(.(gz|bgzf))?$",
+          "nfiles": "1",
+          "description": "Directory path to complementary nucleotide multi-FASTA files.",
+          "optional": "true"
+        },
+        "clean_alignments": {
+          "type": "boolean",
+          "format": "flag",
+          "description": "Set this flag to clean MSA files using GBlocks.",
+          "optional": "true"
+        },
+        "gblocks_args": {
+          "type": "string",
+          "description": "Additional arguments to provide to GBlocks. It is on the user to ensure these are correct.",
+          "optional": "true"
+        }
+      }
+    }
+  }
+}
