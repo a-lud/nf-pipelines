@@ -2,14 +2,17 @@ import groovy.json.JsonSlurper
 
 class NfSchema {
 
-    public static Map validateParameters(workflow, parameters) {
+    public static Map validateParameters(parameters, wrkflow) {
         
         // Parse pipeline schema as map - definitions of what arguments should be
-        def strJson = new File("${workflow.projectDir}/nextflow_schema.json").text
+        def strJson = new File("${wrkflow.projectDir}/nextflow_schema.json").text
         def Map mapSchemaDef = (Map) new JsonSlurper().parseText(strJson).get('definitions')
 
         // Check mandatory parameters
         checkMandatory(parameters, mapSchemaDef)
+
+        // Check cluster settings (if any)
+        checkCluster(parameters, mapSchemaDef, wrkflow)
 
         // Check pipeline parameters
         def mapChecked = checkPipelineArgs(parameters, 
@@ -34,13 +37,13 @@ class NfSchema {
             def type = value.get('type')
             switch(type) {
                 case 'string':
-                    assert v instanceof String: "ERROR: '--${key} ${v}' is not a string"
+                    assert v instanceof String: "ERROR: '--${key} ${v}' is not a string. Please check the help page."
                     break;
                 case 'integer':
-                    assert v instanceof Integer: "ERROR: '--${key} ${v}' is not an integer"
+                    assert v instanceof Integer: "ERROR: '--${key} ${v}' is not an integer. Please check the help page."
                     break;
                 case 'boolean':
-                    assert v instanceof Boolean: "ERROR: '--${key} ${v}' is not a boolean"
+                    assert v instanceof Boolean: "ERROR: '--${key} ${v}' is not a boolean. Please check the help page."
                     break;
             }
 
@@ -50,29 +53,87 @@ class NfSchema {
                 assert valid.contains(v) : "ERROR: Invalid pipeline choice '--pipeline ${v}'. Please select one of: ${valid.join(', ')}"
             }
         }
+    }
 
+    // checkCluster Checks the cluster profile
+    public static void checkCluster(parameters, schema, wrkflow) {
+        // Partition values (schema + user)
+        def Map partition = schema.get('cluster').get('arguments').get('partition')
+        def partitionVal = parameters.get('partition')
+
+        // Profile values (schema + user)
+        def Map profile = schema.get('nf_arguments').get('arguments').get('profile')
+        def List vProfiles = profile.get('valid')
+        def List uProfiles = wrkflow.profile.tokenize(',')
+
+        // Check selected profiles are valid + conda is one of the choices
+        assert vProfiles.containsAll(uProfiles) : 
+            "ERROR: Invalid profile selection '--profile ${uProfiles.join(', ')}'. Please select from the following: ${vProfiles.join(', ')}"
+        assert uProfiles.contains('conda') : 
+            "ERROR: Missing 'conda' as a profile selection. This pipeline relies on conda for software handling"
+
+        // If SLURM profile is selected - check the partition argument
+        if (uProfiles.contains('slurm')) {
+
+            // Schema values for partition 
+            def type = partition.get('type')
+            def valid = partition.get('valid')
+
+            assert partitionVal instanceof String: 
+                "ERROR: '--partition ${partitionVal}' is not a string"
+
+            assert valid.contains(partitionVal) : 
+                "ERROR: Invalid parition choice '--partition ${partitionVal}. Please select one of: ${valid.join(', ')}"
+        }
+    }
+
+    // traverseMap Traverse the argument map and return which arguments have pattern/nfile fields
+    public static List traverseMap(argMap) {
+        def koi = []
+        for (entry in argMap) {
+            def key = entry.key
+            def valueMap = entry.value
+            
+            if (valueMap.keySet().containsAll(['pattern', 'nfiles']) ) {
+                koi << key
+            }
+        }
+        return koi
     }
 
     // checkPipelineArgs Check the provided arguments match the specifications in the schema
     public static Map checkPipelineArgs(parameters, schema, pipeline) {
         // Subset schema for pipeline parameters
         def Map mapPipelineSchema = schema.get(pipeline).get('arguments')
-
-        // prime parameters with empty map for 'pattern' and 'nfiles' - always will be present
-        parameters.put('pattern', "")
-        parameters.put('nfile', "")
+        def Map mutableParams = [:] // This is an ugly approach but does what I want...
+        mutableParams.putAll(parameters)
+        def paramToUpdate = [:]
+        
+        // Keys of interest - have pattern/nfiles fields
+        def koi = traverseMap(mapPipelineSchema)
 
         // Iterate over each argument
         mapPipelineSchema.each { key,  values ->
             assert parameters.containsKey(key) : "ERROR: Missing argument '--${key}'"
             def paramValue = parameters.get(key)
 
-            
-
+            def remove = []
             if (values.keySet().contains("optional")) { // is an optional argument?
                 if (!paramValue) { // If the argument is not passed, move on
                     return;
                 }
+            }
+
+            // Does the argument have pattern/nfile fields? - will have both or neither
+            def tmpMap = [:]
+            if (koi.contains(key)) {
+                tmpMap["${key}"] = [
+                    "path": "tmpPath",
+                    "pattern": "tempPattern", 
+                    "nfiles": "tempNfiles" 
+                ]
+            } else {
+                tmpMap = false
             }
 
             // Check parameter type - all will have a type
@@ -103,19 +164,31 @@ class NfSchema {
                         }
                         break;
                     case 'valid':
-                        assert schemaValue.contains(paramValue) : """
-                        ERROR: Selection '${paramValue}' is invalid (passed to '--${key}'). Select from ${schemaValue.join(', ')}
-                        """.stripIndent()
+                        assert schemaValue.contains(paramValue) : 
+                            "ERROR: Selection '${paramValue}' is invalid (passed to '--${key}'). Select from ${schemaValue.join(', ')}"
                         break;
                     case 'pattern':
                     case 'nfiles':
-                        parameters.put([ key, schemaKey].join('_'), schemaValue)
-                        break;
+                        if(tmpMap) {
+                            tmpMap[key]["path"] = paramValue
+                            tmpMap[key][schemaKey] = schemaValue
+                            // println(["${schemaKey}": schemaValue])
+                            break;
+                        } else {
+                            break;
+                        }
                 }
+            }
+
+            // Update parameters with pattern/nfile fields
+            if (tmpMap) {
+                paramToUpdate.putAll(tmpMap)
             }
         }
         
         // Return updated parameters - some values from schema added (nfiles/patterns)
-        return parameters
+        mutableParams.putAll(paramToUpdate)
+        
+        return mutableParams
     }
 }

@@ -25,6 +25,69 @@
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
           "valid": ["msa", "hyphy", "codeml", "transcurate", "assembly"]
+        },
+        "partition": {
+          "type": "string",
+          "description": "Which HPC partition to use",
+          "valid": ["skylake", "skylakehm", "test"]
+        }
+      }
+    },
+    "nf_arguments": {
+      "title": "Nextflow Arguments",
+      "description": [
+        "These are recommended Nextflow-specific arguments relating to the", 
+        "execution of Nextflow itself. Notice the use of single hyphens when",
+        "calling these arguments!"
+      ],
+      "arguments": {
+        "profile": {
+          "type": "string",
+          "description": "Which pipeline profiles to use to execute the pipeline.",
+          "valid": ["standard", "slurm", "conda"],
+          "optional": "false"
+        },
+        "resume": {
+          "type": "boolean",
+          "description": "Should the workflow be resumed.",
+          "optional": "true"
+        },
+        "work-dir": {
+          "type": "string",
+          "description": "Working directory name.",
+          "optional": "false"
+        },
+        "with-notification": {
+          "type": "string",
+          "description": "Email to send a workflow execution email to - success/failure notification.",
+          "optional": "true"
+        }
+      }
+    },
+    "cluster": {
+      "title": "Cluster Arguments",
+      "description": "Arguments for running jobs on HPC clusters:",
+      "arguments": {
+        "partition": {
+          "type": "string",
+          "description": "Which job-queue to submit to submit jobs to.",
+          "valid": ["skylake", "skylakehm", "test"],
+          "optional": "true"
+        },
+        "max_memory": {
+          "type": "memoryUnit",
+          "description": "Maximum amount of memory that can be requested. DO NOT TOUCH.",
+          "optional": "true"
+        },
+        "max_cpus": {
+          "type": "integer",
+          "description": "Maximum number of CPUs that can be requested. DO NOT TOUCH.",
+          "optional": "true"
+        },
+        "max_time": {
+          "type": "duration",
+          "description": "Maximum amount of time that can be requested. DO NOT TOUCH.",
+          "optional": "true"
         }
       }
     },
@@ -35,7 +98,7 @@
         "input": {
           "type": "string",
           "format": "directory-path",
-          "pattern": ".*f(ast)?a(.(gz|bgzf))?$",
+          "pattern": ".*f(ast|n|a)?a(.(gz|bgzf))?$",
           "nfiles": "1",
           "description": "Directory path to protein multi-FASTA files for alignment.",
           "optional": "false"
@@ -54,7 +117,7 @@
         "nucleotide": {
           "type": "string",
           "format": "directory-path",
-          "pattern": ".*f(ast)?a(.(gz|bgzf))?$",
+          "pattern": ".*f(ast|n|a)?a(.(gz|bgzf))?$",
           "nfiles": "1",
           "description": "Directory path to complementary nucleotide multi-FASTA files.",
           "optional": "true"

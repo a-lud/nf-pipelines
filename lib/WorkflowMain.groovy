@@ -2,48 +2,6 @@ import groovy.json.JsonSlurper
 
 class WorkflowMain {
 
-    // prettyprint Helper function to print the help page nicely
-    public static String prettyPrint(helpSubset) {
-        // Coloured output
-        def c_reset = "\033[0m"
-        def c_green = "\033[0;32m"
-        def c_yellow = "\033[0;33m"
-        def c_red = "\033[0;31m"
-        def line = '---------------------------- '
-
-        // Iterate over the subset
-        helpSubset.each { key, value ->
-            def title = c_yellow + value['title'] + c_reset
-            def arguments = value.get('arguments')
-
-            // Sub-title formatting
-            def Integer lineLen = 80 - (line.length() + title.length()) - 1
-            println(
-                line + title + ' ' + '-' * (lineLen + 11) + '\n\n' + 
-                value['description'] + '\n'
-            )
-
-            arguments.each { argKey, argVals ->
-                def startPos = line.length()
-                def type = argVals['type']
-                def desc = argVals['description']
-                def valid = argVals.containsKey('valid') ? 
-                    " Options: " + c_red + argVals.get('valid').join(', ') + c_reset + '.' : 
-                    ''
-                
-                // Get the length of the variable - calculate whitespace before 'desc'
-                def len = c_green.length() + argKey.length() + c_reset.length() + type.length() + 5
-                def ws = startPos - len + 13
-                println(
-                    "--${c_green}${argKey}${c_reset} ${type}" + " " * ws + "${desc}${valid}"
-                )
-            }
-
-            // Newline between help sections
-            println()
-        }
-    }
-
     // help Prints the help text to screen
     public static String help(parameters, workflow) {
         
@@ -84,8 +42,108 @@ class WorkflowMain {
         }
     }
 
+    // prettyprint Helper function to print the help page nicely
+    public static String prettyPrint(helpSubset) {
+        // Coloured output
+        def c_reset = "\033[0m"
+        def c_green = "\033[0;32m"
+        def c_yellow = "\033[0;33m"
+        def c_red = "\033[0;31m"
+        def line = '---------------------------- '
+
+        // Iterate over the subset
+        helpSubset.each { key, value ->
+            def dash = key == 'nf_arguments' ? '-' : '--'
+            def offset = key == 'nf_arguments' ? 14 : 13
+            def title = c_yellow + value['title'] + c_reset
+            def description = value['description'] instanceof String ? value['description'] : value['description'].join('\n')
+            def arguments = value.get('arguments')
+
+            // Sub-title formatting
+            def Integer lineLen = 80 - (line.length() + title.length()) - 1
+            println(
+                line + title + ' ' + '-' * (lineLen + 11) + '\n\n' + 
+                description + '\n'
+            )
+
+            arguments.each { argKey, argVals ->
+                def startPos = line.length()
+                def type = argVals['type']
+                def desc = argVals['description']
+                def valid = argVals.containsKey('valid') ? 
+                    " Options: " + c_red + argVals.get('valid').join(', ') + c_reset + '.' : 
+                    ''
+                
+                // Get the length of the variable - calculate whitespace before 'desc'
+                def len = c_green.length() + argKey.length() + c_reset.length() + type.length() + 5
+                def ws = startPos - len + offset
+                println(
+                    "${dash}${c_green}${argKey}${c_reset} ${type}" + " " * ws + "${desc}${valid}"
+                )
+            }
+
+            // Newline between help sections
+            println()
+        }
+    }
+
+    // summaryArguments prints the arguments to screen in a formatted style
+    public static String summaryArguments(arguments, wrkflow) {
+        def strJson = new File("${wrkflow.projectDir}/nextflow_schema.json").text
+        def Map mapSchemaDef = (Map) new JsonSlurper().parseText(strJson).get('definitions')
+
+        def line = '---------------------------- '
+        def pipeline = arguments.pipeline
+
+        // Get arguments for relevant fields in the correct order
+        def argSubset = mapSchemaDef.subMap(["mandatory", "nf_arguments", pipeline, "cluster"])
+        argSubset["nf_arguments"] = "" // Blank so I can set actually accessible features below
+
+        argSubset.each { key, values ->
+
+            // Set features for NF-parameters that I can get from workflow
+            // Ugly but does the trick
+            def argNames = key == 'nf_arguments' ? 
+                ["start", "workDir", "profile"] : 
+                values.arguments.keySet()
+
+            def argValues = key == 'nf_arguments' ? 
+                wrkflow.toMap().subMap(argNames) : 
+                arguments.subMap(argNames)
+
+            // Print the header for each section
+            def lineLen = 80 - (line.length() + key.length()) - 12
+            println(line + key + ' ' + '-' * (lineLen + 11) + '\n')
+
+            argValues.each {k, v ->
+                
+                if (v instanceof Map) {
+                    println("${k}")
+                    v.each { ka, va ->
+                        def ws = line.length() - (ka.length() + 3)
+                        println(" - ${ka}" + (" " * ws) + va)
+                    }
+                } else {
+                    def ws = line.length() - k.length()
+                    println(k + (" " * ws) + v)
+                }
+            }
+            println()
+        }
+    }
+
     // initialise manage 'help', 'validation' and printing arguments to screen
-    public static String initialise() {
-            ...
+    public static String initialise(parameters, wrkflow) {
+        
+        // Call help
+        if (parameters.help) {
+            help(parameters, wrkflow)
+        }
+
+        // Validate parameters
+        def checkedArgs = NfSchema.validateParameters(parameters, wrkflow)
+
+        // Print the user provided arguments to screen
+        summaryArguments(checkedArgs, wrkflow)
     }
 }
