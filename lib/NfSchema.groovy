@@ -9,7 +9,7 @@ class NfSchema {
         def Map mapSchemaDef = (Map) new JsonSlurper().parseText(strJson).get('definitions')
 
         // Check mandatory parameters
-        checkMandatory(parameters, mapSchemaDef)
+        checkMandatory(parameters, mapSchemaDef, wrkflow)
 
         // Check cluster settings (if any)
         checkCluster(parameters, mapSchemaDef, wrkflow)
@@ -25,11 +25,18 @@ class NfSchema {
     }
 
     // checkmandatory Check that required pipeline paraemters have been passed and are of correct type
-    public static void checkMandatory(parameters, schema) {
+    public static void checkMandatory(parameters, schema, wrkflow) {
         def Map mapMandatory = schema.get('mandatory').get('arguments')
+        def profiles = wrkflow.profile.tokenize(',')
 
         // Iterate over each key and it's values, checking parameters against it
         mapMandatory.each { key, value ->
+        if (key == 'partition') {
+            if (profiles.contains('standard')) {
+                return;
+            }
+        }
+
             assert parameters.containsKey(key) : "ERROR: Mandatory argument '--${key}' not provided"
             def v = parameters.get(key)
             
@@ -37,20 +44,24 @@ class NfSchema {
             def type = value.get('type')
             switch(type) {
                 case 'string':
-                    assert v instanceof String: "ERROR: '--${key} ${v}' is not a string. Please check the help page."
+                    assert v instanceof String: 
+                        "ERROR: '--${key} ${v}' is not a string. Please check the help page."
                     break;
                 case 'integer':
-                    assert v instanceof Integer: "ERROR: '--${key} ${v}' is not an integer. Please check the help page."
+                    assert v instanceof Integer: 
+                        "ERROR: '--${key} ${v}' is not an integer. Please check the help page."
                     break;
                 case 'boolean':
-                    assert v instanceof Boolean: "ERROR: '--${key} ${v}' is not a boolean. Please check the help page."
+                    assert v instanceof Boolean: 
+                        "ERROR: '--${key} ${v}' is not a boolean. Please check the help page."
                     break;
             }
 
             // Check provided pipeline is a valid selection
             if (key == 'pipeline') {
                 def valid = value.get('valid')
-                assert valid.contains(v) : "ERROR: Invalid pipeline choice '--pipeline ${v}'. Please select one of: ${valid.join(', ')}"
+                assert valid.contains(v) : 
+                    "ERROR: Invalid pipeline choice '--pipeline ${v}'. Please select one of: ${valid.join(', ')}"
             }
         }
     }
@@ -114,15 +125,16 @@ class NfSchema {
 
         // Iterate over each argument
         mapPipelineSchema.each { key,  values ->
-            assert parameters.containsKey(key) : "ERROR: Missing argument '--${key}'"
-            def paramValue = parameters.get(key)
-
-            def remove = []
-            if (values.keySet().contains("optional")) { // is an optional argument?
-                if (!paramValue) { // If the argument is not passed, move on
+            // If an optional argument, check its presence or move on if not given
+            if (values.optional) {
+                if (!parameters.containsKey(key)) {
                     return;
                 }
+            } else {
+                assert parameters.containsKey(key) : "ERROR: Missing argument '--${key}'"
             }
+
+            def paramValue = parameters.get(key)
 
             // Does the argument have pattern/nfile fields? - will have both or neither
             def tmpMap = [:]
@@ -188,7 +200,6 @@ class NfSchema {
         
         // Return updated parameters - some values from schema added (nfiles/patterns)
         mutableParams.putAll(paramToUpdate)
-        
         return mutableParams
     }
 }
