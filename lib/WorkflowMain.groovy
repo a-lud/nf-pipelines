@@ -91,12 +91,15 @@ class WorkflowMain {
     public static String summaryArguments(arguments, wrkflow) {
         def strJson = new File("${wrkflow.projectDir}/nextflow_schema.json").text
         def Map mapSchemaDef = (Map) new JsonSlurper().parseText(strJson).get('definitions')
-
-        def line = '---------------------------- '
         def pipeline = arguments.pipeline
+        def profiles = wrkflow.profile.tokenize(',')
+        def line = '---------------------------- '
 
         // Get arguments for relevant fields in the correct order
-        def argSubset = mapSchemaDef.subMap(["mandatory", "nf_arguments", pipeline, "cluster"])
+        def subKeys = profiles.contains('slurm') ? 
+            ["mandatory", "nf_arguments", pipeline, "cluster"] : 
+            ["mandatory", "nf_arguments", pipeline]
+        def argSubset = mapSchemaDef.subMap(subKeys)
         argSubset["nf_arguments"] = "" // Blank so I can set actually accessible features below
 
         argSubset.each { key, values ->
@@ -133,7 +136,7 @@ class WorkflowMain {
     }
 
     // initialise manage 'help', 'validation' and printing arguments to screen
-    public static String initialise(parameters, wrkflow) {
+    public static Map initialise(parameters, wrkflow) {
         
         // Call help
         if (parameters.help) {
@@ -145,5 +148,6 @@ class WorkflowMain {
 
         // Print the user provided arguments to screen
         summaryArguments(checkedArgs, wrkflow)
+        return checkedArgs
     }
 }
