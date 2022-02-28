@@ -37,7 +37,7 @@ Pipelines I've implemented/plan to write include.
   - [CodeML (ETE3 implementation)][ETE]
   - [HyPhy][HYPHY]
 - [x] [Transcriptome Curation (`CD-HIT` and `TransDecoder`)][TRAN]
-- [ ] Assembly
+- [ ] [Assembly][ASSEMBLY]
 
 ### To be written
 - [ ] Read Based Phasing (`Whatshap`)
@@ -60,4 +60,5 @@ PhD Candidate, The University of Adelaide
 [ETE]: https://github.com/a-lud/nf-pipelines/wiki/CodeML---ETE3-implementation
 [HYPHY]: https://github.com/a-lud/nf-pipelines/wiki/HyPhy
 [TRAN]: https://github.com/a-lud/nf-pipelines/wiki/Trascriptome-Curation
+[ASSEMBLY]: https://github.com/a-lud/nf-pipelines/wiki/Genome-Assembly
 [version]: https://github.com/a-lud/nf-pipelines/tree/2f89cd605320afe77ce384743ff6cd840ba38bde
