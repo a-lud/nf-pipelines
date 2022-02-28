@@ -63,12 +63,13 @@ CONDA_BASE=$(conda info --base)
 source "${CONDA_BASE}/etc/profile.d/conda.sh"
 conda activate nextflow-env
 
-## Location of where the pipeline is installed
+## Pipeline/Directory paths
 PIPE="/home/a1234567/hpcfs/software/nf-pipelines"
 DIR="/home/a1234567/hpcfs/assembly-test"
 
 mkdir -p ${DIR}
 
+# Call the Nextflow pipeline
 nextflow run ${PIPE}/main.nf \
     -profile 'conda,slurm' \
     -work-dir "${DIR}/test-work" \
