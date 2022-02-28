@@ -148,7 +148,7 @@ max_time                     3d
 ```
 
 Once it looks like everything is running ok, you can exit the screen environment by pressing `ctrl + a + d`.
-To get back to your screen environment, type `$screen -r nf-assembly`
+To get back to your screen environment, type `$ screen -r nf-assembly`
 
 ## Planned pipelines
 
