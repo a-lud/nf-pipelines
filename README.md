@@ -37,7 +37,7 @@ Pipelines I've implemented/plan to write include.
   - [CodeML (ETE3 implementation)][ETE]
   - [HyPhy][HYPHY]
 - [x] [Transcriptome Curation (`CD-HIT` and `TransDecoder`)][TRAN]
-- [ ] [Assembly][ASSEMBLY]
+- [x] [Assembly][ASSEMBLY]
 
 ### To be written
 - [ ] Read Based Phasing (`Whatshap`)
