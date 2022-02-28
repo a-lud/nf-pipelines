@@ -34,12 +34,21 @@ You can acceess the wiki from the tab at the top of this page or from this [link
 
 ## Getting started
 
-First, ensure you've got `Nextflow` installed with all it's required dependencies. Then:
+First, ensure you've got `Nextflow` installed with all it's required dependencies. Once you've
+checked that, clone this repository, ensuring you also clone all sub-modules e.g. using `HTTPS`
 
-1. Clone this repository to a location on you're happy with on your system.
-2. Check that the help page works: `nextflow run main.nf --help`
+```bash
+$ git clone --recurse-submodules https://github.com/a-lud/nf-pipelines.git
+```
 
-Check back here if the help page doesn't work and I'll try and help troubleshoot.
+Once you've got the repository cloned, check that you can run the `main.nf` script
+
+```bash
+$ nextflow run /path/to/nf-pipelines/main.nf --help
+```
+
+If this produces an error, come back here and I'll try and help figure out why it's not working.
+
 
 Then, write a simple bash script with the call to the pipeline. Save it to a file e.g.
 `nf-assembly.sh`.
@@ -47,7 +56,7 @@ Then, write a simple bash script with the call to the pipeline. Save it to a fil
 ```bash
 #!/usr/bin/env bash
 
-# Helps not use too many resources on the head node
+# Helps to not overwhelme the head node
 export NXF_OPTS="-Xms500M -Xmx2G"
 
 CONDA_BASE=$(conda info --base)
