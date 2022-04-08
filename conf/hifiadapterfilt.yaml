@@ -1,0 +1,55 @@
+name: hifiadapterfilt
+channels:
+  - conda-forge
+  - defaults
+  - bioconda
+  - anaconda
+dependencies:
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=4.5
+  - bamtools=2.5.2
+  - blast=2.12.0
+  - bzip2=1.0.8
+  - c-ares=1.18.1
+  - ca-certificates=2021.10.8
+  - curl=7.82.0
+  - entrez-direct=16.2
+  - keyutils=1.6.1
+  - krb5=1.19.3
+  - libcurl=7.82.0
+  - libedit=3.1.20191231
+  - libev=4.33
+  - libgcc-ng=11.2.0
+  - libgomp=11.2.0
+  - libnghttp2=1.47.0
+  - libnsl=2.0.0
+  - libssh2=1.10.0
+  - libstdcxx-ng=11.2.0
+  - libzlib=1.2.11
+  - ncurses=6.3
+  - openssl=3.0.0
+  - pcre=8.45
+  - perl=5.32.1
+  - perl-archive-tar=2.40
+  - perl-carp=1.38
+  - perl-common-sense=3.75
+  - perl-compress-raw-bzip2=2.101
+  - perl-compress-raw-zlib=2.101
+  - perl-encode=3.16
+  - perl-exporter=5.72
+  - perl-exporter-tiny=1.002002
+  - perl-extutils-makemaker=6.66
+  - perl-io-compress=2.102
+  - perl-io-zlib=1.11
+  - perl-json=4.05
+  - perl-json-xs=2.34
+  - perl-list-moreutils=0.430
+  - perl-list-moreutils-xs=0.430
+  - perl-parent=0.236
+  - perl-pathtools=3.75
+  - perl-scalar-list-utils=1.62
+  - perl-threaded=5.32.1
+  - perl-types-serialiser=1.01
+  - pigz=2.6
+  - zlib=1.2.11
+
