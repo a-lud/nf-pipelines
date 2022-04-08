@@ -140,7 +140,7 @@
       }
     },
     "assembly": {
-      "title": "Assembly Pipeline Options",
+      "title": "Assembly pipeline options",
       "description": "Genome assembly pipeline arguments.",
       "arguments": {
         "input": {
