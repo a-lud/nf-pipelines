@@ -1,4 +1,4 @@
-#!/user/bin/env bash
+#!/usr/bin/env bash
 
 # Script is from 3D-DNA software. Not my own: https://github.com/aidenlab/3d-dna
 
@@ -130,7 +130,7 @@ if [ $use_parallel == true ]; then
 fi
 
 path_to_scripts=`cd "$( dirname $0)" && pwd`
-path_to_lift=$(dirname ${path_to_scripts})"/lift"
+path_to_lift="${path_to_scripts}/lift"
 
 juicebox=${path_to_scripts}/"juicebox_tools.sh"
 
@@ -156,7 +156,7 @@ if [ -z ${remapped_mnd} ]; then
 	## Remap merged_nodups
 	echo "...Remapping contact data from the original contig set to assembly"
 	if [ $use_parallel == true ]; then
-		cmd="parallel --will-cite -a ${mnd} --pipepart -j 80% --block 1G \"awk -v scale=${scale} -f ${lift_input_mnd_script} <(awk '\\\$0~/^>/{\\\$1=substr(\\\$1,2); print}' ${assembly}) <(awk '\\\$0!~/^>/' ${assembly}) - \" > temp.${genomeid}.asm_mnd.txt"
+		cmd="parallel --will-cite -a ${mnd} --pipepart -j 16 --block 1G \"awk -v scale=${scale} -f ${lift_input_mnd_script} <(awk '\\\$0~/^>/{\\\$1=substr(\\\$1,2); print}' ${assembly}) <(awk '\\\$0!~/^>/' ${assembly}) - \" > temp.${genomeid}.asm_mnd.txt"
 	else
 		cmd="awk -v scale=${scale} -f ${lift_input_mnd_script} <(awk '\$0~/^>/{\$1=substr(\$1,2); print}' ${assembly}) <(awk '\$0!~/^>/' ${assembly}) ${mnd} > temp.${genomeid}.asm_mnd.txt"
 	fi
@@ -202,5 +202,5 @@ bash ${juicebox} pre -q ${mapq} ${add_options} ${remapped_mnd} ${genomeid}${mapq
 ## Cleanup
 [ "$clean_up" == "true" ] && rm ${remapped_mnd}
 
-#
-#
+# This is to prevent a random 'exit 1'
+printf "Finished"
