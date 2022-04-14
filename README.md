@@ -117,7 +117,7 @@ nextflow run ${PIPE}/main.nf \
     --assembly 'primary' \                              # Which Hifiasm output to use throughout the pipeline
     --busco_db '/path/to/busco_db/tetrapoda_odb10' \    # Path to pre-downloaded BUSCO database
     --partition 'skylakehm' \                           # Which HPC partition to submit the job to
-    -resume                                             # I leave this in. Resume the pipeline if it fails for some reasoon
+    -resume                                             # I leave this in. Resume the pipeline if it fails for some reason
 
 conda deactivate
 ```
