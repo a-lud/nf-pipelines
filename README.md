@@ -39,6 +39,11 @@ able to package everything. Ensure the following softare are installed manually:
 
 * `satool` - [GitHub][satool] (used to convert `pin_hic` *SAT* file to *AGP*)
 
+I also note here that many of the scripts in the `bin` directory are not my own and all
+credit goes to the authors! I've simply aggregated the scripts I need in this repository.
+I've tried to make it clear in the scripts where I've got them if the information is not
+already present.
+
 ## Getting started
 
 First, ensure you've got `Nextflow` installed with all it's required dependencies. Once you've
