@@ -32,6 +32,13 @@ using this version of the pipeline.
 You can acceess the wiki from the tab at the top of this page or from this [link][link].
 
 
+## Software requirements
+
+I've attempted to use `conda` where I can for software dependencies. Unfortunately I've not been
+able to package everything. Ensure the following softare are installed manually:
+
+* `satool` - [GitHub][satool]
+
 ## Getting started
 
 First, ensure you've got `Nextflow` installed with all it's required dependencies. Once you've
@@ -220,3 +227,4 @@ PhD Candidate, The University of Adelaide
 [ASSEMBLY]: https://github.com/a-lud/nf-pipelines/wiki/Genome-Assembly
 [version]: https://github.com/a-lud/nf-pipelines/tree/2f89cd605320afe77ce384743ff6cd840ba38bde
 [link]: https://github.com/a-lud/nf-pipelines/wiki
+[satool]: https://github.com/dfguan/satool
