@@ -190,8 +190,7 @@ To get back to your screen environment, type `$ screen -r nf-assembly`
 
 ## Planned pipelines
 
-In the previous version of this pipeline, I'd written a few other pipelines for data analysis.
-These can be fown below, however are **NOT** functional with the current pipeline architecture.
+I have other pipelines that I've written, however these are **NOT** functional with the current pipeline architecture.
 See the message at the beginning of this read-me to see which commit to use for previous pipeline
 iterations.
 
