@@ -36,7 +36,7 @@ To access the old version of this pipeline, download [this version (2f89cd6)][VE
 ## Installation
 
 Before doing anything, ensure you have a working installation of `Nextflow` on your system.
-[Visit the installation page details][INSTALL].
+[Visit the installation page][INSTALL] for details on how to do that.
 
 The pipeline also utilises `Conda` for software management. This can be installed following
 the instructions provided [here][CONDA].
@@ -68,39 +68,7 @@ sub-workflows can be called by passing the sub-workflow name to the help command
 nextflow run /path/to/nf-pipelines/main.nf --help assembly
 ```
 
-which produces the following output
-
-```text
-================================================================================
-                             NF-PIPELINES 0.0.1
-================================================================================
-
-This repository houses a collection of workflows I have developed over the
-course of my PhD. They are typically related to analyses that I needed to carry
-out at some point or another. Feel free to try them out, adapt them or even use
-them as a guide for your own custom pipelines.
-
----------------------------- Mandatory Arguments -------------------------------
-
-These options MUST be provided to run the pipeline:
-
---outdir string              Path to the output directory where the results will be saved.
---out_prefix string          Prefix for output files.
---pipeline string            Specification of which sub-workflow to run. Options: msa, hyphy, codeml, transcurate, assembly, assembly_assessment, repeat.
---partition string           Which HPC partition to use Options: skylake, skylakehm, test.
-
----------------------------- Assembly pipeline options -------------------------
-
-Genome assembly pipeline arguments.
-
---hifi string                Directory path containing the HiFi Fastq file/s.
---assembly string            Which genome assembly output to analyses. Options: primary, haplotype1, haplotype2, haplotypes, all.
---hic string                 Directory path containing the Hi-C Fastq files.
---scaffolder string          Which scaffolding software to use Options: pin_hic, salsa2, all.
---busco_db string            Directory path to a pre-downloaded BUSCO database.
-```
-
-If this produces an error, come back here and I'll try and help figure out why it's not working.
+If you encounter any errors, come back here and I'll try and help out.
 
 ## External software dependencies
 
