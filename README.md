@@ -84,7 +84,11 @@ already present.
 
 ## Wiki
 
-You can acceess the wiki from the tab at the top of this page or from [this link][WIKI].
+I've written a lot of documentation in the wiki, which can be accessed from tab at the top of the
+page, or from [this link][WIKI].
+
+If you think something needs to be added to the documentation, please let me know and I'll do my best
+to clear it up.
 
 ## Citation
 
