@@ -143,7 +143,7 @@
       "title": "Assembly pipeline options",
       "description": "Genome assembly pipeline arguments.",
       "arguments": {
-        "input": {
+        "hifi": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*.fastq.gz",
@@ -182,7 +182,7 @@
       "title": "Assembly assessment options ",
       "description": "",
       "arguments": {
-        "input": {
+        "reviewed_assembly": {
           "type": "string",
           "format": "directory-path",
           "pattern": "*.review.assembly",
