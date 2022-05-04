@@ -117,7 +117,7 @@ shift $(( OPTIND-1 ))
 
 IFS=',' read -r -a res <<< "$res_string"
 
-## HANDLE ARGUMENTS, TODO: check formats
+## HANDLE ARGUMENTS
 assembly=$1
 mnd=$2
 [ $# -eq 2 ] && [ -s ${assembly} ] && [ -s ${mnd} ] || {	echo ":( Not sure how to parse your input or input files not found at intended locations. Exiting!" && echo "$USAGE" && exit 1 ; }
@@ -130,12 +130,12 @@ if [ $use_parallel == true ]; then
 fi
 
 path_to_scripts=`cd "$( dirname $0)" && pwd`
-path_to_lift="${path_to_scripts}/lift"
+# path_to_lift="${path_to_scripts}/lift"
 
 juicebox=${path_to_scripts}/"juicebox_tools.sh"
 
-lift_input_mnd_script=${path_to_lift}/lift-input-mnd-to-asm-mnd.awk
-lift_input_annotations_script=${path_to_lift}/lift-input-annotations-to-asm-annotations.awk
+lift_input_mnd_script=${path_to_scripts}/lift-input-mnd-to-asm-mnd.awk
+lift_input_annotations_script=${path_to_scripts}/lift-input-annotations-to-asm-annotations.awk
 
 if [ ! -f $juicebox ] || [ ! -f $lift_input_mnd_script ] || [ ! -f $lift_input_annotations_script ] ; then
     echo ":( Relevant dependency scripts not found. Exiting!" && exit 1
