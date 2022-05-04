@@ -146,7 +146,7 @@
         "hifi": {
           "type": "string",
           "format": "directory-path",
-          "pattern": "*.fastq.gz",
+          "pattern": "*.{fastq,fq}.gz",
           "nfiles": 1,
           "description": "Directory path containing the HiFi Fastq file/s.",
           "optional": false
@@ -160,7 +160,7 @@
         "hic": {
           "type": "string",
           "format": "directory-path",
-          "pattern": "*_R{1,2}.fastq.gz",
+          "pattern": "*_R{1,2}.{fastq,fq}.gz",
           "nfiles": 2,
           "description": "Directory path containing the Hi-C Fastq files.",
           "optional": true
