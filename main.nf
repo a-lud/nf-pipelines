@@ -24,11 +24,15 @@ Main workflow
 */
 
 include {ASSEMBLY} from "./nf-workflows/assembly" params(checkedArgs)
+include {ASSEMBLY_ASSESSMENT} from './nf-workflows/assembly_assessment' params(checkedArgs)
 
 workflow {
     switch(checkedArgs.pipeline) {
         case 'assembly':
             ASSEMBLY()
+            break;
+        case 'assembly_assessment':
+            ASSEMBLY_ASSESSMENT()
             break;
     }
 //     if (params.pipeline == 'msa') {
