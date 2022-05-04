@@ -18,6 +18,11 @@
           "description": "Path to the output directory where the results will be saved.",
           "optional": false
         },
+        "out_prefix": {
+          "type": "string",
+          "description": "Prefix for output files.",
+          "optional": false
+        },
         "pipeline": {
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
