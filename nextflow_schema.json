@@ -212,6 +212,11 @@
           "valid": [ "primary", "haplotype1", "haplotype2", "haplotypes", "all" ],
           "optional": false
         },
+        "length": {
+          "type": "integer",
+          "description": "Filter scaffolds less than this length.",
+          "optional": true
+        },
         "busco_db": {
           "type": "string",
           "description": "Directory path to a pre-downloaded BUSCO database.",
