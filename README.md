@@ -87,8 +87,8 @@ already present.
 I've written a lot of documentation in the wiki, which can be accessed from tab at the top of the
 page, or from [this link][WIKI].
 
-If you think something needs to be added to the documentation, please let me know and I'll do my best
-to clear it up.
+I *highly* recommend at least reading the [Getting Started][GETSTART] entry to become
+familiar with the pipeline (especially the storage requirements!).
 
 ## Citation
 
@@ -110,4 +110,5 @@ PhD Candidate, The University of Adelaide
 [ASSEMBLY]: https://github.com/a-lud/nf-pipelines/wiki/Genome-Assembly
 [VERSION]: https://github.com/a-lud/nf-pipelines/tree/2f89cd605320afe77ce384743ff6cd840ba38bde
 [WIKI]: https://github.com/a-lud/nf-pipelines/wiki
+[GETSTART]: https://github.com/a-lud/nf-pipelines/wiki/Getting-Started
 [SATOOL]: https://github.com/dfguan/satool
