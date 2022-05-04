@@ -180,7 +180,7 @@
     },
     "assembly_assessment": {
       "title": "Assembly assessment options ",
-      "description": "",
+      "description": "Genome assembly assessment arguments.",
       "arguments": {
         "reviewed_assembly": {
           "type": "string",
