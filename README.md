@@ -75,7 +75,8 @@ If you encounter any errors, come back here and I'll try and help out.
 I've attempted to use `conda` where I can for software dependencies. Unfortunately I've not been
 able to package everything. Ensure the following softare are installed manually:
 
-- `satool` - [GitHub][SATOOL] (used to convert `pin_hic` *SAT* file to *AGP*)
+- `pin_hic` - A lightweight scaffolding tool that produces results similar to SALSA2 ([GitHub][PINHIC])
+- `satool` - used to convert the *SAT* file produced by `pin_hic` to *AGP* format ([GitHub][SATOOL])
 
 I also note here that many of the scripts in the `bin` directory are not my own and all
 credit goes to the authors. I've simply aggregated the scripts I need in this repository.
@@ -111,4 +112,5 @@ PhD Candidate, The University of Adelaide
 [VERSION]: https://github.com/a-lud/nf-pipelines/tree/2f89cd605320afe77ce384743ff6cd840ba38bde
 [WIKI]: https://github.com/a-lud/nf-pipelines/wiki
 [GETSTART]: https://github.com/a-lud/nf-pipelines/wiki/Getting-Started
+[PINHIC]: https://github.com/dfguan/pin_hic
 [SATOOL]: https://github.com/dfguan/satool
