@@ -19,6 +19,7 @@ suppressPackageStartupMessages({
   library(purrr)
   library(readr)
   library(tibble)
+  library(tidyr)
   library(dplyr)
   library(magrittr)
   library(ggplot2)
@@ -29,7 +30,7 @@ print('1. Packages loaded')
 # ------------------------------------------------------------------------------------------------ #
 # Output parameters
 my_ouput <- here('busco_figure.png')
-my_width <- 20
+my_width <- 30
 my_height <- 15
 my_unit <- "cm"
 
@@ -98,6 +99,21 @@ dat <- files %>%
   filter(
     !is.na(category),
     measure != 'Complete BUSCOs (C)'
+  ) %>%
+  separate(
+    col = assembly,
+    into = c('stage', 'id'),
+    sep = '-',
+    remove = FALSE,
+    extra = 'merge'
+  ) %>% arrange(
+    factor(
+      stage,
+      levels = c('contig', 'pin_hic', 'salsa2', 'gapfilled')
+    )
+  ) %>%
+  mutate(
+    assembly = factor(assembly, levels = unique(assembly))
   )
 
 print('3. Short-summary files successfully imported')
@@ -174,7 +190,12 @@ print('4. Figure created')
 # ------------------------------------------------------------------------------------------------ #
 # Overlay the count information onto the columns (not a fan but works)
 for( i in rev(1:length(unique(dat$assembly)))) {
-  s <- rev(unique(dat$summary))[i]
+  s <- rev(
+    distinct(
+      .data = dat,
+      assembly,
+      .keep_all = TRUE)[['summary']]
+  )[i]
 
   fig <- fig +
     annotate(
@@ -204,3 +225,4 @@ print(fig)
 invisible(dev.off())
 
 print("6. Figure saved. All done!")
+quit(status = 0)
