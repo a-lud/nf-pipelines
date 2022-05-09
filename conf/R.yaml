@@ -144,6 +144,7 @@ dependencies:
   - r-testthat=3.1.2
   - r-textshaping=0.3.6
   - r-tibble=3.1.6
+  - r-tidyr=1.2.0
   - r-tidyselect=1.1.1
   - r-tzdb=0.2.0
   - r-utf8=1.2.2
