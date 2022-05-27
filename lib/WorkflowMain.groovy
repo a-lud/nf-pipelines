@@ -66,13 +66,26 @@ class WorkflowMain {
                 description + '\n'
             )
 
+            // Format each set of arguments
             arguments.each { argKey, argVals ->
                 def startPos = line.length()
                 def type = argVals['type']
                 def desc = argVals['description']
-                def valid = argVals.containsKey('valid') ? 
-                    " Options: " + c_red + argVals.get('valid').join(', ') + c_reset + '.' : 
-                    ''
+                def valid = ''
+                if (argVals.containsKey('valid')) {
+                    if (argVals.get('valid') instanceof org.apache.groovy.json.internal.LazyMap) {
+                        def temp = []
+                        argVals.get('valid')
+                               .findAll{ it.key != 'standard' }
+                               .each { entry ->
+                                   temp << "$entry.key=" + entry.value
+                               }
+                        def val = temp.join(', ')
+                        valid = " Options: " + c_red + val + c_reset + '.'
+                    } else if(argVals.get('valid') instanceof java.util.ArrayList) {
+                        valid = " Options: " + c_red + argVals.get('valid')[0].join(', ') + c_reset + '.'
+                    }
+                }
                 
                 // Get the length of the variable - calculate whitespace before 'desc'
                 def len = c_green.length() + argKey.length() + c_reset.length() + type.length() + 5
