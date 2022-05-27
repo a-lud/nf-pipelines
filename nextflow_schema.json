@@ -64,12 +64,16 @@
     },
     "cluster": {
       "title": "Cluster Arguments",
-      "description": "Arguments for running jobs on HPC clusters:",
+      "description": "Arguments for running jobs on HPC clusters (ignore if '-profile standard'):",
       "arguments": {
         "partition": {
           "type": "string",
           "description": "Which job-queue to submit to submit jobs to.",
-          "valid": ["skylake", "skylakehm", "test"],
+          "valid": {
+            "phoenix": ["skylake", "skylakehm", "test"],
+            "gadi": [ "normal" ],
+            "standard": [ false ]
+          },
           "optional": true
         },
         "max_memory": {
