@@ -107,9 +107,9 @@ class WorkflowMain {
         def line = '---------------------------- '
 
         // Get arguments for relevant fields in the correct order
-        def subKeys = profiles.contains('slurm') ? 
-            ["mandatory", "nf_arguments", pipeline, "cluster"] : 
-            ["mandatory", "nf_arguments", pipeline]
+        def subKeys = profiles.contains('standard') ? 
+            ["mandatory", "nf_arguments", pipeline] : 
+            ["mandatory", "nf_arguments", pipeline, "cluster"]
         def argSubset = mapSchemaDef.subMap(subKeys)
         argSubset["nf_arguments"] = "" // Blank so I can set actually accessible features below
 
