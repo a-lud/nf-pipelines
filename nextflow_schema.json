@@ -42,7 +42,7 @@
         "profile": {
           "type": "string",
           "description": "Which pipeline profiles to use to execute the pipeline.",
-          "valid": ["standard", "slurm", "conda"],
+          "valid": ["standard", "phoenix", "gadi", "conda"],
           "optional": false
         },
         "resume": {
