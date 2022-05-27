@@ -28,12 +28,6 @@
           "description": "Specification of which sub-workflow to run.",
           "valid": ["assembly", "assembly_assessment", "codeml"],
           "optional": false
-        },
-        "partition": {
-          "type": "string",
-          "description": "Which HPC partition to use",
-          "valid": ["skylake", "skylakehm", "test"],
-          "optional": true
         }
       }
     },
