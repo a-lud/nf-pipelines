@@ -26,18 +26,14 @@ class NfSchema {
 
     // checkmandatory Check that required pipeline paraemters have been passed and are of correct type
     public static void checkMandatory(parameters, schema, wrkflow) {
+        def red = "\033[0;31m";
+        def reset = "\033[0m";
+
         def Map mapMandatory = schema.get('mandatory').get('arguments')
-        def profiles = wrkflow.profile.tokenize(',')
 
         // Iterate over each key and it's values, checking parameters against it
         mapMandatory.each { key, value ->
-        if (key == 'partition') {
-            if (profiles.contains('standard')) {
-                return;
-            }
-        }
-
-            assert parameters.containsKey(key) : "ERROR: Mandatory argument '--${key}' not provided"
+            assert parameters.containsKey(key) : "${red}ERROR: Mandatory argument '--${key}' not provided${reset}"
             def v = parameters.get(key)
             
             // For the current mandatory key and value
@@ -45,15 +41,15 @@ class NfSchema {
             switch(type) {
                 case 'string':
                     assert v instanceof String: 
-                        "ERROR: '--${key} ${v}' is not a string. Please check the help page."
+                        "${red}ERROR: '--${key} ${v}' is not a string. Please check the help page.${reset}"
                     break;
                 case 'integer':
                     assert v instanceof Integer: 
-                        "ERROR: '--${key} ${v}' is not an integer. Please check the help page."
+                        "${red}ERROR: '--${key} ${v}' is not an integer. Please check the help page.${reset}"
                     break;
                 case 'boolean':
                     assert v instanceof Boolean: 
-                        "ERROR: '--${key} ${v}' is not a boolean. Please check the help page."
+                        "${red}ERROR: '--${key} ${v}' is not a boolean. Please check the help page.${reset}"
                     break;
             }
 
@@ -61,40 +57,38 @@ class NfSchema {
             if (key == 'pipeline') {
                 def valid = value.get('valid')
                 assert valid.contains(v) : 
-                    "ERROR: Invalid pipeline choice '--pipeline ${v}'. Please select one of: ${valid.join(', ')}"
+                    "${red}ERROR: Invalid pipeline choice '--pipeline ${v}'. Please select one of: ${valid.join(', ')}${reset}"
             }
         }
     }
 
     // checkCluster Checks the cluster profile
     public static void checkCluster(parameters, schema, wrkflow) {
+        def red = "\033[0;31m";
+        def reset = "\033[0m";
+
         // Partition values (schema + user)
-        def Map partition = schema.get('cluster').get('arguments').get('partition')
-        def partitionVal = parameters.get('partition')
+        def Map partition_schema = schema.get('cluster').get('arguments').get('partition')
+        def partition_user = parameters.get('partition')
 
         // Profile values (schema + user)
-        def Map profile = schema.get('nf_arguments').get('arguments').get('profile')
-        def List vProfiles = profile.get('valid')
-        def List uProfiles = wrkflow.profile.tokenize(',')
+        def List profiles_schema = schema.get('nf_arguments').get('arguments').get('profile').get('valid')
+        def List profiles_user = wrkflow.profile.tokenize(',')
 
         // Check selected profiles are valid + conda is one of the choices
-        assert vProfiles.containsAll(uProfiles) : 
-            "ERROR: Invalid profile selection '--profile ${uProfiles.join(', ')}'. Please select from the following: ${vProfiles.join(', ')}"
-        assert uProfiles.contains('conda') : 
-            "ERROR: Missing 'conda' as a profile selection. This pipeline relies on conda for software handling"
-
-        // If SLURM profile is selected - check the partition argument
-        if (uProfiles.contains('slurm')) {
-
-            // Schema values for partition 
-            def type = partition.get('type')
-            def valid = partition.get('valid')
-
-            assert partitionVal instanceof String: 
-                "ERROR: '--partition ${partitionVal}' is not a string"
-
-            assert valid.contains(partitionVal) : 
-                "ERROR: Invalid parition choice '--partition ${partitionVal}. Please select one of: ${valid.join(', ')}"
+        assert profiles_schema.containsAll(profiles_user) : 
+            "${red}ERROR: Invalid profile selection '--profile ${profiles_user.join(', ')}'. Please select from the following: ${profiles_schema.join(', ')}${reset}"
+        
+        // TODO: How to manage software - conda is better (currently) but GADI needs modules...
+        // assert profiles_user.contains('conda') :
+            // "${red}ERROR: Missing 'conda' as a profile selection. This pipeline relies on conda for software handling${reset}"
+        
+        // Get partition values based on profile (e.g. phoenix, gadi etc...)
+        def match = profiles_user.intersect(partition_schema.get('valid').keySet())[0]
+        def valid_partitions = partition_schema.get('valid').get(match)
+        if (match != 'standard') {
+            assert valid_partitions.contains(partition_user):
+                "${red}ERROR: Invalid parition choice '--partition ${partition_user}. Please select one of: ${valid_partitions.join(', ')}${reset}"
         }
     }
 
@@ -114,6 +108,9 @@ class NfSchema {
 
     // checkPipelineArgs Check the provided arguments match the specifications in the schema
     public static Map checkPipelineArgs(parameters, schema, pipeline) {
+        def red = "\033[0;31m";
+        def reset = "\033[0m";
+
         // Subset schema for pipeline parameters
         def Map mapPipelineSchema = schema.get(pipeline).get('arguments')
         def Map mutableParams = [:] // This is an ugly approach but does what I want...
@@ -131,7 +128,7 @@ class NfSchema {
                     return;
                 }
             } else {
-                assert parameters.containsKey(key) : "ERROR: Missing argument '--${key}'"
+                assert parameters.containsKey(key) : "${red}ERROR: Missing argument '--${key}'${reset}"
             }
 
             def paramValue = parameters.get(key)
@@ -152,13 +149,13 @@ class NfSchema {
             def type = values.get('type')
             switch(type) {
                 case 'string':
-                    assert paramValue instanceof String: "ERROR: '--${key} ${paramValue}' is not a string"
+                    assert paramValue instanceof String: "${red}ERROR: '--${key} ${paramValue}' is not a string${reset}"
                     break;
                 case 'integer':
-                    assert paramValue instanceof Integer: "ERROR: '--${key} ${paramValue}' is not an integer"
+                    assert paramValue instanceof Integer: "${red}ERROR: '--${key} ${paramValue}' is not an integer${reset}"
                     break;
                 case 'boolean':
-                    assert paramValue instanceof Boolean: "ERROR: '--${key} ${paramValue}' is not a boolean"
+                    assert paramValue instanceof Boolean: "${red}ERROR: '--${key} ${paramValue}' is not a boolean${reset}"
                     break;
             }
             
@@ -172,18 +169,19 @@ class NfSchema {
                     case 'format':
                         if (schemaValue == 'directory-path' || schemaValue == 'file-path') {
                             File path = new File(paramValue)
-                            assert path.exists() : "ERROR: Directory '${paramValue}' does not exist (passed to '--${key}')"
+                            assert path.exists() : 
+                            "${red}ERROR: Directory '${paramValue}' does not exist (passed to '--${key}')${reset}"
                         }
                         break;
                     case 'valid':
                         // Check if the user can provide multiple arguments
                         if(schemaValue[1] == 'single') {
-                            assert schemaValue.contains(paramValue) : 
-                            "ERROR: Selection '${paramValue}' is invalid (passed to '--${key}'). Select from ${schemaValue.join(', ')}"
+                            assert schemaValue[0].contains(paramValue) : 
+                            "${red}ERROR: Selection '${paramValue}' is invalid (passed to '--${key}'). Select from ${schemaValue[0].join(', ')}${reset}"
                         } else {
                             def usrParamVal = paramValue.tokenize(" ")
                             assert schemaValue[0].containsAll(usrParamVal) :
-                            "ERROR: Selection '${paramValue}' is invalid (passed to '--${key}'). Select from ${schemaValue.join(', ')}"
+                            "${red}ERROR: Selection '${paramValue}' is invalid (passed to '--${key}'). Select from ${schemaValue[0].join(', ')}${reset}"
                         }
                         break;
                     case 'pattern':
