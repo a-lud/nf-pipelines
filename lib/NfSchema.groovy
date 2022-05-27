@@ -176,8 +176,15 @@ class NfSchema {
                         }
                         break;
                     case 'valid':
-                        assert schemaValue.contains(paramValue) : 
+                        // Check if the user can provide multiple arguments
+                        if(schemaValue[1] == 'single') {
+                            assert schemaValue.contains(paramValue) : 
                             "ERROR: Selection '${paramValue}' is invalid (passed to '--${key}'). Select from ${schemaValue.join(', ')}"
+                        } else {
+                            def usrParamVal = paramValue.tokenize(" ")
+                            assert schemaValue[0].containsAll(usrParamVal) :
+                            "ERROR: Selection '${paramValue}' is invalid (passed to '--${key}'). Select from ${schemaValue.join(', ')}"
+                        }
                         break;
                     case 'pattern':
                     case 'nfiles':
