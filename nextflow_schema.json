@@ -28,12 +28,6 @@
           "description": "Specification of which sub-workflow to run.",
           "valid": ["assembly", "assembly_assessment", "codeml"],
           "optional": false
-        },
-        "partition": {
-          "type": "string",
-          "description": "Which HPC partition to use",
-          "valid": ["skylake", "skylakehm", "test"],
-          "optional": true
         }
       }
     },
@@ -48,7 +42,7 @@
         "profile": {
           "type": "string",
           "description": "Which pipeline profiles to use to execute the pipeline.",
-          "valid": ["standard", "slurm", "conda"],
+          "valid": ["standard", "phoenix", "gadi", "conda"],
           "optional": false
         },
         "resume": {
@@ -70,12 +64,16 @@
     },
     "cluster": {
       "title": "Cluster Arguments",
-      "description": "Arguments for running jobs on HPC clusters:",
+      "description": "Arguments for running jobs on HPC clusters (ignore if '-profile standard'):",
       "arguments": {
         "partition": {
           "type": "string",
           "description": "Which job-queue to submit to submit jobs to.",
-          "valid": ["skylake", "skylakehm", "test"],
+          "valid": {
+            "phoenix": ["skylake", "skylakehm", "test"],
+            "gadi": [ "normal" ],
+            "standard": [ false ]
+          },
           "optional": true
         },
         "max_memory": {

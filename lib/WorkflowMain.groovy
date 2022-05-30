@@ -5,41 +5,39 @@ class WorkflowMain {
     // help Prints the help text to screen
     public static String help(parameters, workflow) {
         
-        if (parameters.help) {
-            // Coloured output
-            def c_reset = "\033[0m"
-            def c_green = "\033[0;32m"
-            def c_yellow = "\033[0;33m"
+        // Coloured output
+        def c_reset = "\033[0m"
+        def c_green = "\033[0;32m"
+        def c_yellow = "\033[0;33m"
 
-            // Parse pipeline schema as map - definitions of what arguments should be
-            def strJson = new File("${workflow.projectDir}/nextflow_schema.json").text
-            def Map mapSchema = (Map) new JsonSlurper().parseText(strJson)
+        // Parse pipeline schema as map - definitions of what arguments should be
+        def strJson = new File("${workflow.projectDir}/nextflow_schema.json").text
+        def Map mapSchema = (Map) new JsonSlurper().parseText(strJson)
 
-            // Title for meta information
-            def pipelineMeta = mapSchema.subMap([ 'version', 'title', 'description' ])
-            def line1 = "\n" + "=" * 80 + "\n"
-            def title = c_yellow + pipelineMeta['title'] + ' ' + pipelineMeta['version'] + c_reset
-            def centerPoint = (80 - title.length())/2 + 4
-            println(
-                line1 + ' ' * centerPoint + title + line1 + 
-                '\n' + pipelineMeta['description'].join('\n') + '\n'
-            )
+        // Title for meta information
+        def pipelineMeta = mapSchema.subMap([ 'version', 'title', 'description' ])
+        def line1 = "\n" + "=" * 80 + "\n"
+        def title = c_yellow + pipelineMeta['title'] + ' ' + pipelineMeta['version'] + c_reset
+        def centerPoint = (80 - title.length())/2 + 4
+        println(
+            line1 + ' ' * centerPoint + title + line1 + 
+            '\n' + pipelineMeta['description'].join('\n') + '\n'
+        )
 
-            // Defualt help page - or help page for sub-workflow too?
-            def helpSubset = parameters.help instanceof String ? 
-                mapSchema.get('definitions').subMap(['mandatory', parameters.help]) : 
-                mapSchema.get('definitions').subMap(mapSchema.get('definitions').keySet( ))
+        // Defualt help page - or help page for sub-workflow too?
+        def helpSubset = parameters.help instanceof String ? 
+            mapSchema.get('definitions').subMap(['mandatory', 'cluster', parameters.help]) : 
+            mapSchema.get('definitions').subMap(mapSchema.get('definitions').keySet( ))
 
-            // Print the help pages nicely
-            prettyPrint(helpSubset)
+        // Print the help pages nicely
+        prettyPrint(helpSubset)
 
-            // 'false' is created when help is run - delete it!
-            def temp_outdir = new File('./false')
-            if (temp_outdir.exists()) {
-                temp_outdir.deleteDir()
-            }
-            System.exit(0)
+        // 'false' is created when help is run - delete it!
+        def temp_outdir = new File('./false')
+        if (temp_outdir.exists()) {
+            temp_outdir.deleteDir()
         }
+        System.exit(0)
     }
 
     // prettyprint Helper function to print the help page nicely
@@ -66,13 +64,26 @@ class WorkflowMain {
                 description + '\n'
             )
 
+            // Format each set of arguments
             arguments.each { argKey, argVals ->
                 def startPos = line.length()
                 def type = argVals['type']
                 def desc = argVals['description']
-                def valid = argVals.containsKey('valid') ? 
-                    " Options: " + c_red + argVals.get('valid').join(', ') + c_reset + '.' : 
-                    ''
+                def valid = ''
+                if (argVals.containsKey('valid')) {
+                    if (argVals.get('valid') instanceof org.apache.groovy.json.internal.LazyMap) {
+                        def temp = []
+                        argVals.get('valid')
+                               .findAll{ it.key != 'standard' }
+                               .each { entry ->
+                                   temp << "$entry.key=" + entry.value
+                               }
+                        def val = temp.join(', ')
+                        valid = " Options: " + c_red + val + c_reset + '.'
+                    } else if(argVals.get('valid') instanceof java.util.ArrayList) {
+                        valid = " Options: " + c_red + argVals.get('valid')[0].join(', ') + c_reset + '.'
+                    }
+                }
                 
                 // Get the length of the variable - calculate whitespace before 'desc'
                 def len = c_green.length() + argKey.length() + c_reset.length() + type.length() + 5
@@ -96,9 +107,9 @@ class WorkflowMain {
         def line = '---------------------------- '
 
         // Get arguments for relevant fields in the correct order
-        def subKeys = profiles.contains('slurm') ? 
-            ["mandatory", "nf_arguments", pipeline, "cluster"] : 
-            ["mandatory", "nf_arguments", pipeline]
+        def subKeys = profiles.contains('standard') ? 
+            ["mandatory", "nf_arguments", pipeline] : 
+            ["mandatory", "nf_arguments", pipeline, "cluster"]
         def argSubset = mapSchemaDef.subMap(subKeys)
         argSubset["nf_arguments"] = "" // Blank so I can set actually accessible features below
 
