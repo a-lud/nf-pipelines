@@ -26,7 +26,7 @@ class WorkflowMain {
 
         // Defualt help page - or help page for sub-workflow too?
         def helpSubset = parameters.help instanceof String ? 
-            mapSchema.get('definitions').subMap(['mandatory', 'cluster', parameters.help]) : 
+            mapSchema.get('definitions').subMap(['mandatory', 'nf_arguments', 'cluster', parameters.help]) : 
             mapSchema.get('definitions').subMap(mapSchema.get('definitions').keySet( ))
 
         // Print the help pages nicely
@@ -81,7 +81,8 @@ class WorkflowMain {
                         def val = temp.join(', ')
                         valid = " Options: " + c_red + val + c_reset + '.'
                     } else if(argVals.get('valid') instanceof java.util.ArrayList) {
-                        valid = " Options: " + c_red + argVals.get('valid')[0].join(', ') + c_reset + '.'
+                        def opts = argVals.get('valid').size() > 2 ? argVals.get('valid') : argVals.get('valid')[0]
+                        valid = " Options: " + c_red + opts.join(', ') + c_reset + '.'
                     }
                 }
                 
