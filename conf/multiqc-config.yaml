@@ -4,5 +4,6 @@ extra_fn_clean_exts:
   - "_1"
   - "_R1"
   - "_R2"
+  - ".fastp"
 fastp:
   fn: '*fastp.json'

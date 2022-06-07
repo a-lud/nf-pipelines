@@ -12,3 +12,4 @@ dependencies:
   - libgcc-ng=12.1.0
   - libgomp=12.1.0
   - libstdcxx-ng=12.1.0
+  - pigz=2.6

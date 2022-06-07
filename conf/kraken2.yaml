@@ -50,6 +50,7 @@ dependencies:
   - perl-scalar-list-utils=1.62
   - perl-threaded=5.32.1
   - perl-types-serialiser=1.01
+  - pigz=2.6
   - popt=1.16
   - rsync=3.2.3
   - tar=1.34

@@ -105,6 +105,12 @@
           "description": "Directory path containing paired-end short-read FASTQ files.",
           "optional": false
         },
+        "platform": {
+          "type": "string",
+          "description": "",
+          "valid": [[ "illumina", "mgi" ], "single"],
+          "optional": false
+        },
         "krakendb": {
           "type": "string",
           "format": "directory-path",
