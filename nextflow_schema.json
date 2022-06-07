@@ -20,13 +20,13 @@
         },
         "out_prefix": {
           "type": "string",
-          "description": "Prefix for output files.",
+          "description": "Prefix for output files and/or directories.",
           "optional": false
         },
         "pipeline": {
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
-          "valid": ["assembly", "assembly_assessment", "codeml"],
+          "valid": ["qc", "assembly", "assembly_assessment", "codeml"],
           "optional": false
         }
       }
@@ -89,6 +89,46 @@
         "max_time": {
           "type": "duration",
           "description": "Maximum amount of time that can be requested. DO NOT TOUCH.",
+          "optional": true
+        }
+      }
+    },
+    "qc": {
+      "title": "QC pipeline Arguments",
+      "description": "Short-read quality control pipeline arguments.",
+      "arguments": {
+        "seqdir": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern":"*_R{1,2}.{fastq,fq}.gz",
+          "nfiles": -1,
+          "description": "Directory path containing paired-end short-read FASTQ files.",
+          "optional": false
+        },
+        "krakendb": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "Directory path to pre-installed Kraken2 database.",
+          "optional": false
+        },
+        "bq_phred": {
+          "type": "integer",
+          "description": "Quality value that a base is qualified. Default phread quality >= 15.",
+          "optional": true
+        },
+        "n_base_limit": {
+          "type": "integer",
+          "description": "Number of N's in a read before read-pair is removed. Default is 5",
+          "optional": true
+        },
+        "average_qual": {
+          "type": "integer",
+          "description": "Average quality required by a read to not be filtered out. Default 0 (no minimum avg. quality).",
+          "optional": true
+        },
+        "length_required": {
+          "type": "integer",
+          "description": "Reads shorter than this length will be discarded. Default is 15.",
           "optional": true
         }
       }
