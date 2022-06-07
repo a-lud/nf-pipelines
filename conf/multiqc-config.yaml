@@ -1,0 +1,8 @@
+intro_text: "Nextflow QC pipeline. Aggregation of FastQC, Kraken2 and Fastp results."
+extra_fn_clean_exts:
+  - ".report"
+  - "_1"
+  - "_R1"
+  - "_R2"
+fastp:
+  fn: '*fastp.json'
