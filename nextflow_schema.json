@@ -107,7 +107,7 @@
         },
         "platform": {
           "type": "string",
-          "description": "",
+          "description": "Specify the sequencing platform.",
           "valid": [[ "illumina", "mgi" ], "single"],
           "optional": false
         },
