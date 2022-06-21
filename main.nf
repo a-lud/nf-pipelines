@@ -27,6 +27,8 @@ include {QC} from './nf-workflows/qc' params(checkedArgs)
 include {ASSEMBLY} from "./nf-workflows/assembly" params(checkedArgs)
 include {ASSEMBLY_ASSESSMENT} from './nf-workflows/assembly_assessment' params(checkedArgs)
 include {ALIGNMENT} from './nf-workflows/alignment' params(checkedArgs)
+include {CONSENSUS} from './nf-workflows/consensus' params(checkedArgs)
+include {CODEML} from './nf-workflows/codeml' params(checkedArgs)
 
 workflow {
     switch(checkedArgs.pipeline) {
@@ -39,18 +41,14 @@ workflow {
         case 'assembly_assessment':
             ASSEMBLY_ASSESSMENT()
             break;
+        case 'alignment':
+            ALIGNMENT()
+            break;
+        case 'consensus':
+            CONSENSUS()
+            break;
+        case 'codeml':
+            CODEML()
+            break;
     }
-//     if (params.pipeline == 'msa') {
-//         include {MSA} from './nf-workflows/msa' params(params)
-//         MSA()
-//     } else if (params.pipeline == 'hyphy') {
-//         include {HYPHY} from './nf-workflows/hyphy' params(params)
-//         HYPHY()
-//     } else if (params.pipeline == 'codeml') {
-//         include {CODEML} from './nf-workflows/codeml' params(params)
-//         CODEML()
-//     } else if (params.pipeline == 'transcurate') {
-//         include {TRANSCURATE} from './nf-workflows/transcurate' params(params)
-//         TRANSCURATE()
-//     }
 }
