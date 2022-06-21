@@ -42,7 +42,7 @@
         "profile": {
           "type": "string",
           "description": "Which pipeline profiles to use to execute the pipeline.",
-          "valid": ["standard", "phoenix", "gadi", "conda"],
+          "valid": ["standard", "phoenix", "afw", "gadi", "conda"],
           "optional": false
         },
         "resume": {
@@ -72,6 +72,7 @@
           "valid": {
             "phoenix": ["skylake", "skylakehm", "test"],
             "gadi": [ "normal" ],
+            "afw": [ "afw" ],
             "standard": [ false ]
           },
           "optional": true
