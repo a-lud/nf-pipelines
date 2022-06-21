@@ -26,7 +26,7 @@
         "pipeline": {
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
-          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "codeml"],
+          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "consensus", "codeml"],
           "optional": false
         }
       }
@@ -258,6 +258,76 @@
         "mapq": {
           "type": "integer",
           "description": "Minimum mapping quality threshold. Default 10.",
+          "optional": true
+        }
+      }
+    },
+    "consensus": {
+      "title": "Consensus options",
+      "description": "Consensus pipeline arguments.",
+      "arguments": {
+        "bamdir": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern": "*.bam",
+          "nfiles": 1,
+          "description": "Directory path to BAM files.",
+          "optional": false
+        },
+        "sheet": {
+          "type": "string",
+          "format": "file-path",
+          "description": "CSV file of two columns '<bam.basename>,<reference>'.",
+          "optional": false
+        },
+        "mapq": {
+          "type": "integer",
+          "description": "Mapping quality applied at 'mpileup'. Default: 10.",
+          "optional": true
+        },
+        "baseq": {
+          "type": "integer",
+          "description": "Base quality applied at 'mpileup'. Default: 10.",
+          "optional": true
+        },
+        "ploidy": {
+          "type": "integer",
+          "description": "Ploidy of the organism. Default: 2",
+          "optional": true
+        },
+        "mpileup_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools filter'. Provide within single quotes.",
+          "optional": true
+        },
+        "call_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools filter'. Provide within single quotes.",
+          "optional": true
+        },
+        "filter_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools filter'. Default: '--SnpGap 10'.",
+          "optional": true
+        },
+        "view_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools view'. Default: '--exclude-types indels'.",
+          "optional": true
+        },
+        "norm_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools norm'. Default: '-m +any'.",
+          "optional": true
+        },
+        "sort_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools sort'. Provide within single quotes.",
+          "optional": true
+        },
+        "consensus_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools consensus'. Default: '-H 1'.",
           "optional": true
         }
       }
