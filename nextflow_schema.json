@@ -230,7 +230,7 @@
       "description": "Short-read alignment arguments.",
       "arguments": {
         "seqdir": {
-          "type": "",
+          "type": "string",
           "format": "directory-path",
           "pattern": "*_R{1,2}.{fastq,fq}.gz",
           "nfiles": 2,
