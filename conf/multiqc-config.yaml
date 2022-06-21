@@ -1,4 +1,4 @@
-intro_text: "Nextflow QC pipeline. Aggregation of FastQC, Kraken2 and Fastp results."
+intro_text: False
 extra_fn_clean_exts:
   - ".report"
   - "_1"
