@@ -1,0 +1,21 @@
+name: sambamba
+channels:
+  - anaconda
+  - bioconda
+  - conda-forge
+dependencies:
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=4.5
+  - bzip2=1.0.8
+  - ldc=1.28.1
+  - libedit=3.1.20210910
+  - libgcc-ng=12.1.0
+  - libgomp=12.1.0
+  - libllvm12=12.0.1
+  - libstdcxx-ng=12.1.0
+  - libzlib=1.2.12
+  - lz4-c=1.9.3
+  - ncurses=6.3
+  - sambamba=0.8.2
+  - xz=5.2.5
+  - zlib=1.2.12

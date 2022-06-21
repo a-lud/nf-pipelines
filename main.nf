@@ -23,9 +23,10 @@ Main workflow
 ################################################################################
 */
 
+include {QC} from './nf-workflows/qc' params(checkedArgs)
 include {ASSEMBLY} from "./nf-workflows/assembly" params(checkedArgs)
 include {ASSEMBLY_ASSESSMENT} from './nf-workflows/assembly_assessment' params(checkedArgs)
-include {QC} from './nf-workflows/qc' params(checkedArgs)
+include {ALIGNMENT} from './nf-workflows/alignment' params(checkedArgs)
 
 workflow {
     switch(checkedArgs.pipeline) {

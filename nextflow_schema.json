@@ -26,7 +26,7 @@
         "pipeline": {
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
-          "valid": ["qc", "assembly", "assembly_assessment", "codeml"],
+          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "codeml"],
           "optional": false
         }
       }
@@ -221,6 +221,43 @@
         "busco_db": {
           "type": "string",
           "description": "Directory path to a pre-downloaded BUSCO database.",
+          "optional": true
+        }
+      }
+    },
+    "alignment": {
+      "title": "Alignment options",
+      "description": "Short-read alignment arguments.",
+      "arguments": {
+        "seqdir": {
+          "type": "",
+          "format": "directory-path",
+          "pattern": "*_R{1,2}.{fastq,fq}.gz",
+          "nfiles": 2,
+          "description": "Directory path to paired-end reads.",
+          "optional": false
+        },
+        "sheet": {
+          "type": "string",
+          "format": "file-path",
+          "description": "CSV file of two columns '<sample.basename>,<reference>'.",
+          "optional": false
+        },
+        "platform": {
+          "type": "string",
+          "description": "Specify the sequencing platform.",
+          "valid": [[ "illumina", "mgi" ], "single"],
+          "optional": false
+        },
+        "aligner": {
+          "type": "string",
+          "description": "Aligner to use for short-read mapping.",
+          "valid": [ [ "bwa2", "minimap2" ], "single" ],
+          "optional": false
+        },
+        "mapq": {
+          "type": "integer",
+          "description": "Minimum mapping quality threshold. Default 10.",
           "optional": true
         }
       }
