@@ -26,7 +26,7 @@
         "pipeline": {
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
-          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "consensus", "codeml"],
+          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "consensus", "orthofinder", "codeml"],
           "optional": false
         }
       }
@@ -149,7 +149,7 @@
           "format": "directory-path",
           "pattern": "*.{fastq,fq}.gz",
           "nfiles": 1,
-          "description": "Directory path containing the HiFi Fastq file/s.",
+          "description": "Directory path containing the HiFi fastq file/s.",
           "optional": false
         },
         "assembly": {
@@ -163,7 +163,7 @@
           "format": "directory-path",
           "pattern": "*_R{1,2}.{fastq,fq}.gz",
           "nfiles": 2,
-          "description": "Directory path containing the Hi-C Fastq files.",
+          "description": "Directory path containing the Hi-C fastq files.",
           "optional": true
         },
         "scaffolder": {
@@ -329,6 +329,34 @@
           "type": "string",
           "description": "Optional arguments to pass to 'bcftools consensus'. Default: '-H 1'.",
           "optional": true
+        }
+      }
+    },
+    "orthofinder": {
+      "title": "OrthoFinder ortholog options",
+      "description": "Pipeline to detect orthologs using Orthofinder",
+      "arguments": {
+        "gffs": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern": "*.{gff,gff3}",
+          "nfiles": 1,
+          "description": "Directory path to annotation files. Extension must be '.gff' or '.gff3'.",
+          "optional": false
+        },
+        "genomes": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern": "*.{fa,fasta,fna}",
+          "nfiles": 1,
+          "description": "Directory path to genome assembly files. Extension must be '.fa', '.fasta' or '.fna'.",
+          "optional": false
+        },
+        "search_prog": {
+          "type": "string",
+          "description": "Which sequence search program OrthoFinder should use.",
+          "valid": [ ["blast", "diamond", "diamond_ultra_sens", "blast_gz", "mmseqs", "blast_nucl"], "single" ],
+          "optional": false
         }
       }
     },
