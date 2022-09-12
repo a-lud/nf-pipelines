@@ -357,6 +357,11 @@
           "description": "Which sequence search program OrthoFinder should use.",
           "valid": [ ["blast", "diamond", "diamond_ultra_sens", "blast_gz", "mmseqs", "blast_nucl"], "single" ],
           "optional": false
+        },
+        "stop_early": {
+          "type": "boolean",
+          "description": "Stop OrthoFinder after generating MSA files. Running the full pipeline can take a LONG time.",
+          "optional": true
         }
       }
     },
