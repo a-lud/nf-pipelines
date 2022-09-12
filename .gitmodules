@@ -4,3 +4,6 @@
 [submodule "nf-workflows"]
 	path = nf-workflows
 	url = https://github.com/a-lud/nf-workflows.git
+[submodule "bin/eteTools"]
+	path = bin/eteTools
+	url = git@github.com:a-lud/eteTools.git
