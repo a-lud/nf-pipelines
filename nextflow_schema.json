@@ -358,6 +358,11 @@
           "valid": [ ["blast", "diamond", "diamond_ultra_sens", "blast_gz", "mmseqs", "blast_nucl"], "single" ],
           "optional": false
         },
+        "trim_msa": {
+          "type": "boolean",
+          "description": "Should OrthoFinder trim multiple sequence alignments?",
+          "optional": true
+        },
         "stop_early": {
           "type": "boolean",
           "description": "Stop OrthoFinder after generating MSA files. Running the full pipeline can take a LONG time.",
