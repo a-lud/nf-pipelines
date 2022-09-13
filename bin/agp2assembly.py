@@ -8,10 +8,12 @@ from __future__ import print_function
 import sys
 from collections import defaultdict
 
+
 def printUsage():
-    print("\nagp2assembly.py usage:", end='')
+    print("\nagp2assembly.py usage:", end="")
     print("\tagp2assembly.py <input_agp_file> <output_assembly_file>")
     return
+
 
 def read_from_agp(filename):
     lines = []
@@ -31,12 +33,13 @@ def read_from_agp(filename):
                 this_contig = -1 * counter
             else:
                 this_contig = counter
-            
+
             if fields[0] not in order:
-            	order.append(fields[0])
-            	
+                order.append(fields[0])
+
             clusters[fields[0]].append(str(this_contig))
     return lines, clusters, order
+
 
 def write_assembly(lines, clusters, order, outfilename):
     with open(outfilename, "w") as outfile:
@@ -46,12 +49,14 @@ def write_assembly(lines, clusters, order, outfilename):
             outfile.write(" ".join(clusters[cluster]) + "\n")
     return 0
 
+
 def main():
     if len(sys.argv) != 3:
         printUsage()
         sys.exit()
     lines, clusters, order = read_from_agp(sys.argv[1])
     write_assembly(lines, clusters, order, sys.argv[2])
+
 
 if __name__ == "__main__":
     main()
