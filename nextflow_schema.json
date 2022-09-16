@@ -395,6 +395,11 @@
                      "M10","M11","M12","M13","SLR","fb_anc","bsA","bsA1","bsB",
                      "bsC","bsD","b_free","b_neut","fb"], "multiple" ],
           "optional": false
+        },
+        "dropout": {
+          "type": "boolean",
+          "description": "Run drop-out analysis if BS models are run. Only works if you are running bsA AND bsA1.",
+          "optional": true
         }
       }
     }
