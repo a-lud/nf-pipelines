@@ -55,10 +55,18 @@ if __name__ == "__main__":
     print(tree.ascii_art())
     print("\n" + "-" * 100 + "\n")
 
-    # Tips that need removal
-    logging.info("Removed the following tips:")
-    tips_remove = tree.get_node_matching_name("#1").tips()
-    for t in tips_remove:
+    # Get oldest marked node
+    nodes = [ l for l in tree.get_node_names() if '#' in l ]
+    len_tips = 0
+    tips = None
+    for n in nodes:
+        t = tree.get_node_matching_name(n).tips()
+        if len_tips < len(t):
+            len_tips = len(t)
+            tips = t
+
+    # Prune tips from tree (will automatically remove single internal nodes)
+    for t in tips:
         print(f"\t- {t.name}")
         t.parent.remove(t)
         tree.prune()
