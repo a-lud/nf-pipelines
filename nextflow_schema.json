@@ -26,7 +26,7 @@
         "pipeline": {
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
-          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "consensus", "orthofinder", "codeml"],
+          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "variant", "orthofinder", "codeml"],
           "optional": false
         }
       }
@@ -262,6 +262,93 @@
         }
       }
     },
+    "variant": {
+      "title": "Variant calling options",
+      "description": "Variant calling pipeline arguments.",
+      "arguments": {
+        "sheet": {
+          "type": "string",
+          "format": "file-path",
+          "description": "CSV file with paths to each BAM and its corresponding reference genome: '<path BAM>,<path reference>'",
+          "optional": false
+        },
+        "method": {
+          "type": "string",
+          "description": "Method of variant calling.",
+          "valid": [ ["standard", "joint"], "single" ],
+          "optional": false
+        },
+        "vcftype": {
+          "type": "string",
+          "description": "Type of VCF to return.",
+          "valid": [ [ "variant", "allsites" ] , "single" ],
+          "optional": false
+        },
+        "regions": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern": "*.bed",
+          "nfiles": 1,
+          "description": "Directory path to region files (BED format) to call variants in. The basename of the file should match the reference it is to be used for.",
+          "optional": true
+        },
+        "nodp": {
+          "type": "boolean",
+          "description": "Don't apply depth filter (only applies to 'standard' mode)",
+          "optional": true
+        },
+        "mapq": {
+          "type": "integer",
+          "description": "Mapping quality applied at 'mpileup'. Default: 10.",
+          "optional": true
+        },
+        "baseq": {
+          "type": "integer",
+          "description": "Base quality applied at 'mpileup'. Default: 10.",
+          "optional": true
+        },
+        "genoq": {
+          "type": "integer",
+          "description": "Genotype-quality filter.",
+          "optional": true
+        },
+        "ploidy": {
+          "type": "integer",
+          "description": "Ploidy of the organism. Default: 2",
+          "optional": true
+        },
+        "mpileup_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools mpileup'. Provide within single quotes.",
+          "optional": true
+        },
+        "call_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools call'. Provide within single quotes.",
+          "optional": true
+        },
+        "filter_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools filter'. Provide within single quotes.",
+          "optional": true
+        },
+        "view_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools view'. Provide within single quotes.",
+          "optional": true
+        },
+        "norm_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools norm'. Provide within single quotes.",
+          "optional": true
+        },
+        "sort_opt": {
+          "type": "string",
+          "description": "Optional arguments to pass to 'bcftools sort'. Provide within single quotes.",
+          "optional": true
+        }
+      }
+    },
     "consensus": {
       "title": "Consensus options",
       "description": "Consensus pipeline arguments.",
@@ -351,6 +438,12 @@
           "nfiles": 1,
           "description": "Directory path to genome assembly files. Extension must be '.fa', '.fasta' or '.fna'.",
           "optional": false
+        },
+        "tree": {
+          "type": "string",
+          "format": "file-path",
+          "description": "File path to phylogenetic tree that OrhtoFinder should use.",
+          "optional": true
         },
         "search_prog": {
           "type": "string",
