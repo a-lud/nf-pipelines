@@ -7,3 +7,5 @@ extra_fn_clean_exts:
   - ".fastp"
 fastp:
   fn: '*fastp.json'
+sambamba:
+  fn: '*.sambamba'
