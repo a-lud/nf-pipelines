@@ -292,6 +292,11 @@
           "description": "Directory path to region files (BED format) to call variants in. The basename of the file should match the reference it is to be used for.",
           "optional": true
         },
+        "force": {
+          "type": "boolean",
+          "description": "Force the re-creation of internal intermediate files (bamlist, BED-regions) rather than using a previous runs versions.",
+          "optional": true
+        },
         "nodp": {
           "type": "boolean",
           "description": "Don't apply depth filter (only applies to 'standard' mode)",
