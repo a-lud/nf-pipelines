@@ -28,10 +28,11 @@ include {ASSEMBLY} from "./nf-workflows/assembly" params(checkedArgs)
 include {ASSEMBLY_ASSESSMENT} from './nf-workflows/assembly_assessment' params(checkedArgs)
 include {ALIGNMENT} from './nf-workflows/alignment' params(checkedArgs)
 include {VARIANT} from './nf-workflows/variant' params(checkedArgs)
-// TODO: Change psmc back to './'
-// include {PSMC} from '../nf-workflows/psmc' params(checkedArgs)
+include {PSMC} from './nf-workflows/psmc' params(checkedArgs)
 include {ORTHOFINDER} from './nf-workflows/orthofinder' params(checkedArgs)
 include {CODEML} from './nf-workflows/codeml' params(checkedArgs)
+include {HYPHY} from './nf-workflows/hyphy' params(checkedArgs)
+include {HYPHY_ANALYSES} from './nf-workflows/hyphy_analyses' params(checkedArgs)
 
 workflow {
     switch(checkedArgs.pipeline) {
@@ -50,14 +51,20 @@ workflow {
         case 'variant':
             VARIANT()
             break;
-        // case 'psmc':
-        //     PSMC()
-        //     break;
+        case 'psmc':
+            PSMC()
+            break;
         case 'orthofinder':
             ORTHOFINDER()
             break;
         case 'codeml':
             CODEML()
+            break;
+        case 'hyphy':
+            HYPHY()
+            break;
+        case 'hyphy_analyses':
+            HYPHY_ANALYSES()
             break;
     }
 }
