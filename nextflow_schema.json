@@ -26,7 +26,11 @@
         "pipeline": {
           "type": "string",
           "description": "Specification of which sub-workflow to run.",
-          "valid": ["qc", "assembly", "assembly_assessment", "alignment", "variant", "orthofinder", "codeml"],
+          "valid": [
+            "qc", "assembly", "assembly_assessment", "alignment", 
+            "variant", "psmc", "orthofinder", "codeml",
+            "hyphy", "hyphy_analyses"
+          ],
           "optional": false
         }
       }
@@ -278,6 +282,12 @@
           "valid": [ ["standard", "joint"], "single" ],
           "optional": false
         },
+        "caller": {
+          "type": "string",
+          "description": "Which BCFtools calling method to use: new (-m) or old (-c). Use old for PSMC!",
+          "valid": [ [ "new", "old" ], "single" ],
+          "optional": false
+        },
         "vcftype": {
           "type": "string",
           "description": "Type of VCF to return.",
@@ -497,6 +507,114 @@
         "dropout": {
           "type": "boolean",
           "description": "Run drop-out analysis if BS models are run. Only works if you are running bsA AND bsA1.",
+          "optional": true
+        }
+      }
+    },
+    "hyphy": {
+      "title": "HyPhy pipeline options",
+      "description": "HyPhy specific options",
+      "arguments": {
+        "msa": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern": "*.{fa,fasta}",
+          "nfiles": 1,
+          "description": "Directory path to MSA files. Extension must be '.fa' or '.fasta'.",
+          "optional": false
+        },
+        "tree": {
+          "type": "string",
+          "format": "file-path",
+          "description": "File path to phylogenetic tree with 'test' branches marked using '{}' notation. E.g. (sample1, sample2{Test});.",
+          "optional": false
+        },
+        "testLabel": {
+          "type": "string",
+          "description": "What is the branch label ('{}') listed in the tree file.",
+          "optional": false
+        },
+        "analysis": {
+          "type": "string",
+          "description": "Which HyPhy analysis/analyses to run.",
+          "valid": [ [ "RELAX" ], "single" ],
+          "optional": false
+        }
+      }
+    },
+    "hyphy_analyses": {
+      "title": "HyPhy Analyses pipeline options",
+      "description": "HyPhy analyses specific options",
+      "arguments": {
+        "msa": {
+          "type": "string",
+          "format": "directory-path",
+          "pattern": "*.{fa,fasta}",
+          "nfiles": 1,
+          "description": "Directory path to MSA files. Extension must be '.fa' or '.fasta'.",
+          "optional": false
+        },
+        "tree": {
+          "type": "string",
+          "format": "file-path",
+          "description": "File path to phylogenetic tree with 'test' branches marked using '{}' notation. E.g. (sample1, sample2{Test});.",
+          "optional": false
+        },
+        "testLabel": {
+          "type": "string",
+          "description": "What is the branch label ('{}') listed in the tree file.",
+          "optional": false
+        },
+        "batchFile": {
+          "type": "string",
+          "description": "Which 'HyPhy analysis' batch file to run",
+          "valid": [ [ "BUSTED-PH.bf" ], "single" ],
+          "optional": false
+        },
+        "exedir": {
+          "type":"string",
+          "description": "Absolute directory path to 'hyphy analyses' directory. This has to be installed via git!",
+          "optional": false
+        }
+      }
+    },
+    "psmc": {
+      "title": "PSMC pipeline options",
+      "description": "PSMC pipeline arguments:",
+      "arguments": {
+        "filedir": {
+          "type": "string",
+          "description": "Directory path to VCF files.",
+          "format": "directory-path",
+          "pattern": "**{vcf.gz,bam}",
+          "nfiles": 1,
+          "optional": false
+        },
+        "filetype": {
+          "type": "string",
+          "description": "Type of input file. VCF files must be created with the old SAMtools/BCFtools calling algorithm (-c).",
+          "valid": [ [ "vcf", "bam"], "single" ],
+          "optional": false
+        },
+        "clock": {
+          "type": "string",
+          "description": "Molecular clocks to use when running PSMC. Separate multiple clocks using a single white space.",
+          "optional": false
+        },
+        "bootstrap": {
+          "type": "boolean",
+          "description": "Whether to generate bootstrap support",
+          "optional": true
+        },
+        "minMQ": {
+          "type": "integer",
+          "description": "Minimum mapping quality value to consider when generating the consensus sequence.",
+          "optional": false
+        },
+        "regions": {
+          "type": "string",
+          "format": "file-path",
+          "description": "File path to CSV that pairs region BED files to samples: <sample.basename>,<bed.path>.",
           "optional": true
         }
       }
