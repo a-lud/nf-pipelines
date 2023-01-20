@@ -571,9 +571,14 @@
           "valid": [ [ "BUSTED-PH.bf" ], "single" ],
           "optional": false
         },
-        "exedir": {
+        "hyphyDev": {
           "type":"string",
-          "description": "Absolute directory path to 'hyphy analyses' directory. This has to be installed via git!",
+          "description": "Absolute directory path to HyPhy 'develop' directory. This has to be installed via git!",
+          "optional": false
+        },
+        "hyphyAnalysis": {
+          "type":"string",
+          "description": "Absolute directory path to 'hyphy-analyses' directory. This has to be installed via git!",
           "optional": false
         }
       }
