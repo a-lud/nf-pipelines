@@ -116,6 +116,44 @@
           "valid": [[ "illumina", "mgi" ], "single"],
           "optional": false
         },
+        "ref": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "File path to contaminants FASTA to screen against (BBduk).",
+          "optional": false
+        },
+        "k": {
+          "type": "integer",
+          "description": "K-mer length used for finding contaminants.",
+          "optional": false
+        },
+        "mink": {
+          "type": "integer",
+          "description": "Look for shorter kmers at read tips down to this length.",
+          "optional": true
+        },
+        "rcomp": {
+          "type": "string",
+          "description": "Look for reverse-complements of kmers in addition to forward K-mers.",
+          "valid": [[ "t", "f" ], "single"],
+          "optional": true
+        },
+        "ktrim": {
+          "type": "string",
+          "description": "Trim reads to remove bases matching reference kmers, plus all bases to the left or right.",
+          "valid": [[ "f", "r", "l" ], "single"],
+          "optional": true
+        },
+        "hdist": {
+          "type": "integer",
+          "description": "Maximum Hamming distance for ref kmers.",
+          "optional": true
+        },
+        "minlength": {
+          "type": "integer",
+          "description": "Reads shorter than this after trimming will be discarded.",
+          "optional": true
+        },
         "krakendb": {
           "type": "string",
           "format": "directory-path",
