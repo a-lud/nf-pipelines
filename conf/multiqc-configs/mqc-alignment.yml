@@ -1,0 +1,28 @@
+intro_text: False
+module_order:
+  - samtools:
+      name: "Flagstat (pre-filtering)"
+      anchor: "flagstat_pre"
+      info: "This section of the report shows Flagstat results before BAM filtering."
+      target: ""
+      path_filters:
+        - "*-pre.flagstat"
+  - sambamba
+  - samtools:
+      name: "Flagstat (post-filtering)"
+      anchor: "flagstat_post"
+      info: "This section of the report shows Flagstat results after BAM filtering."
+      target: ""
+      path_filters:
+      - "*-post.flagstat"
+  - mosdepth:
+    - name: 'MosDepth'
+extra_fn_clean_exts:
+  - "_1"
+  - "_R1"
+  - "_R2"
+  - "-pre.flagstat"
+  - "-post.flagstat"
+sambamba:
+  fn: '*.sambamba'
+

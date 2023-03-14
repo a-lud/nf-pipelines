@@ -1,0 +1,21 @@
+intro_text: False
+module_order:
+  - fastqc:
+      info: "Quality assessment before any filtering is applied to the squence data"
+  - bbduk
+  - kraken
+  - fastp
+bbduk:
+  fn: '*-bbduk.log'
+fastp:
+  fn: '*fastp.json'
+sambamba:
+  fn: '*.sambamba'
+extra_fn_clean_exts:
+  - ".report"
+  - "_1"
+  - "_R1"
+  - "_R2"
+  - ".fastp"
+  - "-bbduk.log"
+
