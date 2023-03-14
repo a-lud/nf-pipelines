@@ -19,4 +19,37 @@ class Tools {
         
         return fileList.size() != 0 ? true : false
     }
+
+    // Parse alignment sample sheet and check for existance of index files
+    public static Map hasIndex(String csv, String idxType) {
+        // Read all lines from CSV file and get unique references
+        def refs = []
+        def csv_lines = new File(csv).readLines()*.tokenize(',')
+
+        // Unique references in CSV file
+        csv_lines.each { row ->
+            if (! refs.contains(row[1])) {
+                refs.add(row[1])
+            }
+        }
+
+        // Index type
+        def out = [(true): [], (false): []]
+        switch(idxType) {
+            case 'fai':
+                refs.each { ref ->
+                    def val = new File(ref + '.fai').exists()
+                    out[(val)].add(ref)
+                }
+                break;
+            case 'bwa':
+                refs.each { ref ->
+                    def val = new File(ref + '.0123').exists()
+                    out[(val)].add(ref)
+                }
+                break;
+        }
+
+        return out
+    }
 }
